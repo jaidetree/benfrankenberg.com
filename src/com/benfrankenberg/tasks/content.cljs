@@ -9,6 +9,7 @@
 (def gulp (js/require "gulp"))
 (def hiccup (js/require "@thi.ng/hiccup"))
 (def log (js/require "fancy-log"))
+(def reload (js/require "../../../src/js/hacks/reload.js"))
 (def stream (js/require "@eccentric-j/highland"))
 (def Vinyl (js/require "vinyl"))
 
@@ -45,11 +46,9 @@
   [render-sym]
   (let [ns-name (namespace render-sym)
         f-name (name render-sym)
-        node-name (str cwd "/" (s/replace ns-name #"\." "/"))]
-    (.eval cljs (str "(ns importer
-                        (:require [goog.object :as obj]))
-                      (def module (js/require \"" node-name "\"))
-                      (obj/get module \"" f-name "\")"))))
+        node-name (str cwd "/" (s/replace ns-name #"\." "/"))
+        module (reload node-name)]
+    (obj/get module f-name)))
 
 (defn static-page
   [{:keys [render output]}]
