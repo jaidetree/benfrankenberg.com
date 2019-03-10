@@ -1,0 +1,26 @@
+{
+  "name": "benfrankenberg.com",
+  "version": "1.0.0",
+  "description": "Website of Benjamin Frankenberg",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eccentric-j/benfrankenberg.com.git"
+  },
+  "author": "Jay Zawrotny <jayzawrotny@gmail.com>",
+  "license": "Artistic-2.0",
+  "bugs": {
+    "url": "https://github.com/eccentric-j/benfrankenberg.com/issues"
+  },
+  "homepage": "https://github.com/eccentric-j/benfrankenberg.com#readme",
+  "dependencies": {
+    "@eccentric-j/highland": "^0.1.0",
+    "@thi.ng/hiccup": "^3.1.1",
+    "clojurescript": "0.0.11",
+    "gulp": "^4.0.0",
+    "node-sass": "^4.11.0"
+  }
+}
