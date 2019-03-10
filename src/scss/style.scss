@@ -1,3 +1,27 @@
+
+// Utils
+// ---------------------------------------------------------------------------
+@function rems ($px) {
+  @return $px/16px * 1rem;
+}
+
+@function black ($percent) {
+  @return darken(white, $percent);
+}
+
+// Base
+// ---------------------------------------------------------------------------
+
+@import "reset";
+
 body {
-  background: #ccc;
+  background: #313253;
+}
+
+// Blocks
+// ---------------------------------------------------------------------------
+.hero {
+  background: url(/img/ben_looks_right.png);
+  background-size: cover;
+  height: 100vh;
 }

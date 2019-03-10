@@ -1,13 +1,21 @@
 (ns src.com.benfrankenberg.tasks.style
   (:require [clojure.string :as s]
-            [src.com.benfrankenberg.tasks.util :refer [rename]]))
+            [src.com.benfrankenberg.tasks.color :as c]
+            [src.com.benfrankenberg.tasks.util :refer [base rename]]))
 
 (def gulp (js/require "gulp"))
+(def log (js/require "fancy-log"))
 (def stream (js/require "@eccentric-j/highland"))
 (def sass (js/require "node-sass"))
 (def Buffer (.-Buffer (js/require "buffer")))
 
 (def render-css (.wrapCallback stream (.-render sass)))
+
+(defn log-css-file
+  [filename]
+  (log (c/line (c/plugin "style")
+               "Compiled"
+               (c/file filename))))
 
 (defn create-css-file
   [file compilation]
@@ -18,7 +26,7 @@
 
 (defn rename-scss-file
   [file-path]
-  (s/replace file-path #"\.scss$" ".css"))
+  (s/replace file-path #"scss" "css"))
 
 (defn scss->css
   [options]
@@ -29,12 +37,13 @@
         (clj->js)
         (render-css)
         (.map #(create-css-file file %))
-        (.map #(rename % rename-scss-file)))))
+        (.map #(rename % rename-scss-file))
+        (.tap #(log-css-file (.-relative %))))))
 
 (.task gulp "style"
   (fn
    []
-   (-> (.src gulp "src/scss/**/*.scss")
+   (-> (.src gulp "src/scss/**/*.scss" #js {:base (base)})
        (.pipe (stream))
        (.flatMap (scss->css {:outputStyle "compressed"}))
-       (.pipe (.dest gulp "dist/css")))))
+       (.pipe (.dest gulp "./dist")))))
