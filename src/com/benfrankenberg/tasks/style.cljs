@@ -45,5 +45,6 @@
    []
    (-> (.src gulp "src/scss/**/*.scss" #js {:base (base)})
        (.pipe (stream))
+       (.filter #(not (.startsWith (.-basename %) "_")))
        (.flatMap (scss->css {:outputStyle "compressed"}))
        (.pipe (.dest gulp "./dist")))))

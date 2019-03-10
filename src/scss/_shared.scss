@@ -1,0 +1,20 @@
+// Utils
+// ---------------------------------------------------------------------------
+@function rems ($px) {
+  @return $px/16px * 1rem;
+}
+
+@function black ($percent) {
+  @return darken(white, $percent);
+}
+
+// Typography
+// ---------------------------------------------------------------------------
+
+%display-font {
+  font-family: 'IM Fell English', serif;
+}
+
+%body-font {
+  font-family: 'Slabo 27px', serif;
+}

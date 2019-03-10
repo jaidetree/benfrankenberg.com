@@ -1,27 +1,54 @@
-
-// Utils
-// ---------------------------------------------------------------------------
-@function rems ($px) {
-  @return $px/16px * 1rem;
-}
-
-@function black ($percent) {
-  @return darken(white, $percent);
-}
+@import "shared";
+@import "reset";
 
 // Base
 // ---------------------------------------------------------------------------
 
-@import "reset";
-
 body {
-  background: #313253;
+  background: #000123;
+  @extend %body-font;
+}
+
+h1, h2, h3, h4, h5 {
+  @extend %display-font;
+  color: #313253
+}
+
+h1 {
+  font-size: 7vh;
+}
+
+h2 {
+  font-size: 5vh;
+}
+
+h3 {
+  font-size: 4vh;
+}
+
+h4 {
+  font-size: 2vh;
+}
+
+h5 {
+  font-size: 1vh;
 }
 
 // Blocks
 // ---------------------------------------------------------------------------
+.body {
+  @extend %body-font;
+}
+.display {
+  @extend %display-font;
+}
 .hero {
+  position: relative;
   background: url(/img/ben_looks_right.png);
   background-size: cover;
+  background-position: 25% 100%;
   height: 100vh;
+}
+.hero__inner {
+  position: absolute;
 }
