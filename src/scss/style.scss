@@ -5,21 +5,21 @@
 // ---------------------------------------------------------------------------
 
 body {
-  background: #000123;
+  background: #404134;
   @extend %body-font;
 }
 
 h1, h2, h3, h4, h5 {
-  @extend %display-font;
-  color: #313253
+  color: #f4ddda;
 }
 
 h1 {
-  font-size: 7vh;
+  font-size: 5vw;
+  line-height: 1.2;
 }
 
 h2 {
-  font-size: 5vh;
+  font-size: 2vh;
 }
 
 h3 {
@@ -44,9 +44,9 @@ h5 {
 }
 .hero {
   position: relative;
-  background: url(/img/ben_looks_right.png);
+  background: url(/img/ben_hero.jpg);
   background-size: cover;
-  background-position: 25% 100%;
+  background-position: 25% 30%;
   height: 100vh;
 }
 .hero__inner {
