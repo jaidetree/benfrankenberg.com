@@ -12,11 +12,9 @@
         [:meta {:name "viewport"
                 :content "width=device-width, initial-scale=1.0, user-scalable=no"}]
         [:link {:rel "stylesheet"
-                :href "https://use.typekit.net/goa5jvn.css"}]
-        [:link {:rel "stylesheet"
                 :href "/css/style.css"}]
         [:link {:rel "stylesheet"
-                :href "https://fonts.googleapis.com/css?family=IM+Fell+English|Slabo+27px"}]
+                :href "https://fonts.googleapis.com/css?family=Alegreya|Slabo+27px"}]
         [:link {:rel "stylesheet"
                  :media "screen and (max-width: 929px)"
                  :href "/css/mobile.css"}]
@@ -29,6 +27,6 @@
       [:body
         [:header.hero
           [:div.hero__inner
-            [:h1.display "Benjamin Frankenberg"]
+            [:h1.hero__title.display "Benjamin Frankenberg"]
             [:h2.body "Actor &bull; Artist &bull; Swordsman"]]]]]))
 
