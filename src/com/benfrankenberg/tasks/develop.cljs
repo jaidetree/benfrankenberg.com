@@ -1,9 +1,14 @@
 (ns src.com.benfrankenberg.site.tasks.develop
-  (:require [src.com.benfrankenberg.tasks.util :refer [base]]))
+  (:require [src.com.benfrankenberg.tasks.util :refer [base]]
+            [src.com.benfrankenberg.tasks.cache :refer [cache-file file-updated? hash-file]]))
 
 (def stream (js/require "@eccentric-j/highland"))
 (def gulp (js/require "gulp"))
 (def Vinyl (js/require "vinyl"))
+
+(def sources #js ["./src/img/**/*"
+                  "./src/scss/**/*.scss"
+                  "./src/com/benfrankenberg/site/**/*.cljs"])
 
 (.task gulp "auto-build"
   (fn develop
@@ -21,11 +26,32 @@
                           :base (base)
                           :event (.-event %)}))))
 
+(defn stream-sources
+  [_]
+  (let [sources (.concat sources "!./src/scss/**/_*.scss")]
+    (-> (.src gulp sources #js {:base (base)})
+        (stream))))
+
+(defn start-with
+  [source-stream value]
+  (let [value-stream (.of stream value)]
+    (-> #js [value-stream source-stream]
+        (stream)
+        (.merge))))
+
+(defn log-file
+  [file]
+  (println {:path (.-path file)
+            :hash (.-hash file)}))
+
 (.task gulp "watch"
   (fn []
-    (-> (.watch gulp #js ["./src/img/**/*"
-                          "./src/scss/**/*.scss"
-                          "./src/com/benfrankenberg/site/**/*.cljs"]
-                #js {:ignoreInitial false})
+    (-> (.watch gulp sources)
         (stream-watch)
-        (.tap (.-log js/console)))))
+        (.throttle 250)
+        (start-with (Vinyl.))
+        (.flatMap stream-sources)
+        (.tap hash-file)
+        (.filter file-updated?)
+        (.tap cache-file)
+        (.tap log-file))))
