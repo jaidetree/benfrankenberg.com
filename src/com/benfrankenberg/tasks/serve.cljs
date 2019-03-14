@@ -1,5 +1,5 @@
 (ns src.com.benfrankenberg.tasks.serve
-  (:require [src.com.benfrankenberg.tasks.color :as c]))
+  (:require [src.com.benfrankenberg.tasks.lib.color :as c]))
 
 (def Buffer (.-Buffer (js/require "buffer")))
 (def gulp (js/require "gulp"))

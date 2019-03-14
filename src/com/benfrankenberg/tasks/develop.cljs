@@ -1,6 +1,11 @@
 (ns src.com.benfrankenberg.site.tasks.develop
-  (:require [src.com.benfrankenberg.tasks.util :refer [base]]
-            [src.com.benfrankenberg.tasks.cache :refer [cache-file file-updated? hash-file]]))
+  (:require
+    [src.com.benfrankenberg.tasks.lib.cache :refer [cache-file file-updated? hash-file]]
+    [src.com.benfrankenberg.tasks.lib.util :refer [base glob?]]
+    [src.com.benfrankenberg.tasks.content :refer [hiccup->html]]
+    [src.com.benfrankenberg.tasks.images :refer [optimize-images]]
+    [src.com.benfrankenberg.tasks.style :refer [scss->css]]
+    [src.com.benfrankenberg.tasks.serve :refer [browser-sync]]))
 
 (def stream (js/require "@eccentric-j/highland"))
 (def gulp (js/require "gulp"))
@@ -10,26 +15,18 @@
                   "./src/scss/**/*.scss"
                   "./src/com/benfrankenberg/site/**/*.cljs"])
 
-(.task gulp "auto-build"
-  (fn develop
-    []
-    (.watch gulp "./src/{com/benfrankenberg/site,img,scss}/**/*"
-            (.series gulp "build"))))
+(defn watch-sources
+  [globs]
+  (let [watcher (.watch gulp globs)]
+    (-> (stream "all" watcher #js ["event" "path"])
+        (.map #(Vinyl. #js {:path (.-path %)
+                            :base (base)
+                            :event (.-event %)})))))
 
-(.task gulp "develop"
-  (.parallel gulp "auto-build" "serve"))
-
-(defn stream-watch
-  [watcher]
-  (-> (stream "all" watcher #js ["event" "path"])
-      (.map #(Vinyl. #js {:path (.-path %)
-                          :base (base)
-                          :event (.-event %)}))))
-
-(defn stream-sources
-  [_]
-  (let [sources (.concat sources "!./src/scss/**/_*.scss")]
-    (-> (.src gulp sources #js {:base (base)})
+(defn read-source-files
+  [globs]
+  (fn [_]
+    (-> (.src gulp globs #js {:base (base)})
         (stream))))
 
 (defn start-with
@@ -42,16 +39,58 @@
 (defn log-file
   [file]
   (println {:path (.-path file)
-            :hash (.-hash file)}))
+            :hash (.-hash file)
+            :built? (.-built file)}))
+
+(defn built?
+  [file]
+  (= (.-built file) true))
+
+(defn tag-build
+  [file]
+  (set! (.-built file) true)
+  file)
+
+(defn run-build
+  [f source]
+  (-> source
+      (.fork)
+      (.through f)
+      (.tap tag-build)))
+
+(defn build
+  [source fs]
+  (-> (map #(run-build % source) fs)
+      (vec)
+      (conj (.fork source))
+      (clj->js)
+      (stream)
+      (.merge)))
+
+(defn refresh
+  [source]
+  (-> source
+      (.filter (glob? ["dist/img/**/*.{jpg,png}"]))
+      (.debounce 100)
+      (.tap #(.reload browser-sync))))
 
 (.task gulp "watch"
   (fn []
-    (-> (.watch gulp sources)
-        (stream-watch)
+    (-> (watch-sources sources)
         (.throttle 250)
         (start-with (Vinyl.))
-        (.flatMap stream-sources)
+        (.flatMap (read-source-files
+                    (.concat sources "!./src/scss/**/_*.scss")))
         (.tap hash-file)
         (.filter file-updated?)
         (.tap cache-file)
-        (.tap log-file))))
+        (build [scss->css
+                hiccup->html
+                optimize-images])
+        (.filter built?)
+        (.pipe (.dest gulp "./dist"))
+        (.pipe (stream))
+        (.through refresh))))
+
+(.task gulp "develop"
+  (.parallel gulp "watch" "serve"))

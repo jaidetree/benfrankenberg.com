@@ -1,4 +1,4 @@
-(ns src.com.benfrankenberg.tasks.cache)
+(ns src.com.benfrankenberg.tasks.lib.cache)
 
 (def crypto (js/require "crypto"))
 

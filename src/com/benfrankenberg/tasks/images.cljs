@@ -1,6 +1,6 @@
 (ns src.com.benfrankenberg.tasks.images
-  (:require [src.com.benfrankenberg.tasks.color :as c]
-            [src.com.benfrankenberg.tasks.util :refer [base]]))
+  (:require [src.com.benfrankenberg.tasks.lib.color :as c]
+            [src.com.benfrankenberg.tasks.lib.util :refer [base glob?]]))
 
 (def gulp (js/require "gulp"))
 (def imagemin (js/require "imagemin"))
@@ -32,7 +32,7 @@
                  (c/data (format-size updated))
                  (c/green "(" percent "%)")))))
 
-(defn optimize
+(defn optimize-img
   [options]
   (fn [file]
     (let [plugins #js [(jpeg :jpg options)
@@ -47,10 +47,16 @@
           (.map (fn [contents]
                   (.clone file #js {"contents" contents})))))))
 
+(defn optimize-images
+  [source]
+  (-> source
+      (.filter (glob? "src/img/**/*.{jpg,png}"))
+      (.flatMap (optimize-img {:jpg {:quality "65-80"}}))))
+
 (.task gulp "images"
  (fn []
   (-> (.src gulp "src/img/**/*.{jpg,png}" #js {:base (base)})
       (.pipe (stream))
-      (.flatMap (optimize {:jpg {:quality "65-80"}}))
+      (.flatMap (optimize-img {:jpg {:quality "65-80"}}))
       (.pipe (.dest gulp "./dist")))))
 

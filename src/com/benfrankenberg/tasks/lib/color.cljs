@@ -1,4 +1,4 @@
-(ns src.com.benfrankenberg.tasks.color
+(ns src.com.benfrankenberg.tasks.lib.color
   (:require [clojure.string :as s]))
 
 (def color (js/require "ansi-colors"))
