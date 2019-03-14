@@ -74,6 +74,13 @@
       (.debounce 100)
       (.tap #(.reload browser-sync))))
 
+(defn dest
+  [out-dir]
+  (fn [source]
+    (-> source
+        (.pipe gulp "./dist")
+        (.pipe (stream)))))
+
 (.task gulp "watch"
   (fn []
     (-> (watch-sources sources)
@@ -88,8 +95,7 @@
                 hiccup->html
                 optimize-images])
         (.filter built?)
-        (.pipe (.dest gulp "./dist"))
-        (.pipe (stream))
+        (.through (dest "./dist"))
         (.through refresh))))
 
 (.task gulp "develop"
