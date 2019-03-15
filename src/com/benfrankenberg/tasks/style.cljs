@@ -1,5 +1,6 @@
 (ns src.com.benfrankenberg.tasks.style
   (:require [clojure.string :as s]
+            [src.com.benfrankenberg.tasks.lib.cache :refer [prevent-cache]]
             [src.com.benfrankenberg.tasks.lib.color :as c]
             [src.com.benfrankenberg.tasks.lib.util :refer [base glob? rename]]))
 
@@ -9,7 +10,6 @@
 (def sass (js/require "node-sass"))
 (def Buffer (.-Buffer (js/require "buffer")))
 
-
 (def render-css (.wrapCallback stream (.-render sass)))
 
 (defn log-css-file
@@ -17,6 +17,19 @@
   (log (c/line (c/plugin "style")
                "Compiled"
                (c/file filename))))
+
+(defn scss-partial?
+  [file]
+  (let [basename (.-basename file)]
+    (.startsWith basename "_")))
+
+(defn src-scss
+  [file]
+  (-> (.src gulp #js ["src/scss/**/*.scss"
+                      "!src/scss/**/_*.scss"]
+                 #js {:base (base)})
+      (stream)
+      (.tap #(when (and file (scss-partial? file)) (prevent-cache %)))))
 
 (defn create-css-file
   [file compilation]
@@ -50,8 +63,6 @@
 (.task gulp "style"
   (fn
    []
-   (-> (.src gulp "src/scss/**/*.scss" #js {:base (base)})
-       (.pipe (stream))
-       (.filter #(not (.startsWith (.-basename %) "_")))
+   (-> (src-scss)
        (.flatMap (scss {:outputStyle "compressed"}))
        (.pipe (.dest gulp "./dist")))))

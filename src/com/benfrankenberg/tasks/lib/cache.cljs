@@ -22,7 +22,8 @@
 
 (defn file-updated?
   [file]
-  (updated? (.-path file) (.-hash file)))
+  (or (.-skip-cache file)
+      (updated? (.-path file) (.-hash file))))
 
 (defn hash-file
   [file]
@@ -35,3 +36,7 @@
   [file]
   (update (.-path file) (.-hash file))
   file)
+
+(defn prevent-cache
+  [file]
+  (set! (.-skip-cache file) true))

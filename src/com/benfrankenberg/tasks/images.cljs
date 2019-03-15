@@ -32,6 +32,11 @@
                  (c/data (format-size updated))
                  (c/green "(" percent "%)")))))
 
+(defn src-images
+  [_]
+  (-> (.src gulp "src/img/**/*.{jpg,png}" #js {:base (base)})
+      (stream)))
+
 (defn optimize-img
   [options]
   (fn [file]

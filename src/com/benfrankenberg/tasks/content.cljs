@@ -3,7 +3,7 @@
     [clojure.string :as s]
     [goog.object :as obj]
     [src.com.benfrankenberg.tasks.lib.color :as c]
-    [src.com.benfrankenberg.tasks.lib.util :refer [glob?]]))
+    [src.com.benfrankenberg.tasks.lib.util :refer [base glob?]]))
 
 (def Buffer (.-Buffer (js/require "buffer")))
 (def cljs (js/require "clojurescript"))
@@ -42,6 +42,11 @@
                (c/data file-type)
                "page"
                (c/file filename))))
+
+(defn src-hiccup
+  [_]
+  (-> (.src gulp "src/com/benfrankenberg/site/**/*.cljs" #js {:base (base)})
+      (stream)))
 
 (defn load-render-fn
   [render-sym]
