@@ -35,7 +35,7 @@
 (defn src-images
   [_]
   (-> (.src gulp "src/img/**/*.{jpg,png}" #js {:base (base)})
-      (stream)))
+      (.pipe (stream))))
 
 (defn optimize-img
   [options]

@@ -2,14 +2,14 @@
   (:require
     [src.com.benfrankenberg.tasks.lib.cache :refer [cache-file file-updated? hash-file]]
     [src.com.benfrankenberg.tasks.lib.util :refer [base glob?]]
+    [src.com.benfrankenberg.tasks.assets :refer [copy-public-file src-public]]
     [src.com.benfrankenberg.tasks.content :refer [hiccup->html src-hiccup]]
     [src.com.benfrankenberg.tasks.images :refer [optimize-images src-images]]
-    ;; [src.com.benfrankenberg.tasks.static :refer [copy-public-file src-public]]
     [src.com.benfrankenberg.tasks.style :refer [scss->css src-scss]]
     [src.com.benfrankenberg.tasks.serve :refer [browser-sync]]))
 
-(def stream (js/require "@eccentric-j/highland"))
 (def gulp (js/require "gulp"))
+(def stream (js/require "@eccentric-j/highland"))
 (def Vinyl (js/require "vinyl"))
 
 (def sources #js ["./src/img/**/*"
