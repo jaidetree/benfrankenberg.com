@@ -14,7 +14,7 @@
 (defn bio
   []
   [:div.group.bio
-    [:h3.display "About Ben"]
+    [:h3.display "About Benjamin Frankenberg"]
     [:p.text.mt "Ben is a professional actor with experience in a wide selection of mediums such as theater, film, TV, and movies. He breathes life into characters by incorporating both technical acting techniques and his personal artistic vision to delight audiences on both the macro and micro level to reach deep within their mind and souls. Ben currently holds a performance art degree from Savannah College School of Art and Design."]])
 
 (defn links
