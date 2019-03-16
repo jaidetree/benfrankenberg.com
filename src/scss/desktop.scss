@@ -4,3 +4,17 @@
 // ---------------------------------------------------------------------------
 .hero__inner {
 }
+
+.about__headshot {
+  order: 1;
+  width: 48vw;
+}
+.about__content {
+  order: 2;
+  width: 52vw;
+}
+
+.section {
+  display: flex;
+  flex-flow: row nowrap;
+}

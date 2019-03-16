@@ -1,8 +1,12 @@
-@import "shared";
 @import "reset";
+@import "shared";
 
 // Base
 // ---------------------------------------------------------------------------
+* {
+  box-sizing: border-box;
+}
+
 html, body {
   text-size-adjust: none;
   -webkit-text-size-adjust: none;
@@ -10,34 +14,46 @@ html, body {
   -ms-text-size-adjust: none;
 }
 
+body, a, p, input {
+  @extend %body-font;
+}
+
 body {
   background: #404134;
-  @extend %body-font;
 }
 
 h1, h2, h3, h4, h5 {
   color: #f4ddda;
+  font-weight: normal;
 }
 
 h1 {
-  font-size: 7vh;
+  font-size: rems(50px);
   line-height: 1.2;
 }
 
 h2 {
-  font-size: 3vh;
+  font-size: rems(42px);
 }
 
 h3 {
-  font-size: 1.5vh;
+  font-size: rems(36px);
 }
 
 h4 {
-  font-size: 1vh;
+  font-size: rems(24px);
 }
 
 h5 {
-  font-size: 0.5vh;
+  font-size: rems(18px);
+}
+
+a {
+  color: #F0B94D;
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
 }
 
 // Blocks
@@ -48,11 +64,61 @@ h5 {
 .display {
   @extend %display-font;
 }
-.hero {
-  position: relative;
+.text {
+  @extend %body-font;
+  color: #56674C;
+  color: #4B4F49;
+  color: #3D4F32;
+  color: #444F3D;
+  font-size: rems(20px);
+  line-height: 1.8;
+}
+
+.ml {
+  margin-left: rems(32px);
+}
+.mt {
+  margin-top: rems(32px);
+}
+
+.background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
   background: url(/img/ben_hero.jpg);
   background-size: cover;
   background-position: 25% 30%;
+  z-index: -1;
+}
+
+.btn {
+  display: inline-block;
+  border: rems(1px) solid #F0B94D;
+  padding: rems(16px) rems(24px);
+  border-radius: rems(3px);
+  color: #F0B94D;
+  font-size: rems(24px);
+}
+.btn:hover {
+  background: rgba(#F0B94D, 0.2);
+  text-decoration: none;
+}
+
+.column {
+  flex: 1 1 auto;
+  position: relative;
+  height: 100vh;
+  padding: rems(32px);
+}
+
+.group {
+  margin-bottom: rems(64px);
+}
+
+.hero {
+  position: relative;
   height: 100vh;
 }
 .hero__inner {
@@ -60,7 +126,57 @@ h5 {
   right: 2vw;
   bottom: 2vw;
   padding: 2vw;
+  z-index: 5;
 }
 .hero__title {
   text-transform: uppercase;
 }
+.hero__subtitle {
+  font-size: rems(24px);
+}
+
+.inline {
+  margin-right: rems(12px);
+}
+
+.links {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+}
+.links__link {
+  margin-bottom: rems(24px);
+}
+
+.profile-photo {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url(/img/ben_hero.jpg);
+  background-size: cover;
+  background-position: 25% 30%;
+}
+
+.section {
+  position: relative;
+  margin-top: rems(120px);
+  padding: 0;
+  background: rgba(#404134, 0.9);
+  background: #393a2c;
+  background: #121413;
+}
+
+// .section::before {
+//   position: absolute;
+//   left: 0;
+//   right: 0;
+//   bottom: 100%;
+//   height: rems(4px);
+//   background: -moz-linear-gradient(top, rgba(57,58,44,0) 0%, rgba(57,58,44,0.99) 99%, rgba(57,58,44,1) 100%);
+//   background: -webkit-linear-gradient(top, rgba(57,58,44,0) 0%,rgba(57,58,44,0.99) 99%,rgba(57,58,44,1) 100%);
+//   background: linear-gradient(to bottom, rgba(57,58,44,0) 0%,rgba(57,58,44,0.99) 99%,rgba(57,58,44,1) 100%);
+//   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00393a2c', endColorstr='#393a2c',GradientType=0 );
+//   content: "";
+// }
