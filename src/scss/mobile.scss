@@ -13,3 +13,19 @@ h1, h2 {
 .desktop {
   display: none;
 }
+
+.btn {
+  display: block;
+  width: 100%;
+}
+
+.group {
+  margin-bottom: rems(32px);
+}
+
+.profile-photo__img {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 0 auto;
+}

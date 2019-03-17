@@ -11,6 +11,29 @@
   width: 52vw;
 }
 
+.btn {
+  display: inline-block;
+}
+
+.group {
+  margin-bottom: rems(64px);
+}
+
+.profile-photo {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url(/img/ben_hero.jpg);
+  background-size: cover;
+  background-position: 25% 30%;
+}
+
+.profile-photo__img {
+  display: none;
+}
+
 .section {
   display: flex;
   flex-flow: row nowrap;

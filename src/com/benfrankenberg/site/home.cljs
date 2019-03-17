@@ -15,11 +15,11 @@
   []
   [:div.group.bio
     [:h3.display "About Benjamin Frankenberg"]
-    [:p.text.mt "Ben is a professional actor with experience in a wide selection of mediums such as theater, film, TV, and movies. He breathes life into characters by incorporating both technical acting techniques and his personal artistic vision to delight audiences on both the macro and micro level to reach deep within their mind and souls. Ben currently holds a performance art degree from Savannah College School of Art and Design."]])
+    [:p.text.mt "Ben is a professional actor with experience in a wide selection of mediums such as theater, film, TV, and movies. He breathes life into characters by incorporating both technical acting techniques and his personal artistic vision to delight and inspire audiences. He like many great actors works hard to bring strong characterization into every element of his performances in both grand movements and subtle ticks to reach deep into our minds and hearts to give us memorable characters that leave the stage with us. Ben currently holds a performance art degree from Savannah College School of Art and Design."]])
 
 (defn links
   []
-  [:div.group.links
+  [:div.links
     [:a.btn.links__link
       {:href "/downloads/benjamin-frankenberg-resume.pdf"}
       [:i.inline.fa.fa-file-pdf]
@@ -35,8 +35,9 @@
     [:div.column.about__content
       (bio)
       (links)]
-    [:div.column.about__headshot.desktop
-      [:div.profile-photo]]])
+    [:div.column.about__headshot
+      [:div.profile-photo
+        [:img.profile-photo__img {:src "/img/ben_hero.jpg"}]]]])
 
 (defn render
   []
