@@ -15,7 +15,7 @@
   []
   [:div.group.bio
     [:h3.display "About Benjamin Frankenberg"]
-    [:p.text.mt "Ben is a professional actor with experience in a wide selection of mediums such as theater, film, TV, and movies. He breathes life into characters by incorporating both technical acting techniques and his personal artistic vision to delight and inspire audiences. He like many great actors works hard to bring strong characterization into every element of his performances in both grand movements and subtle ticks to reach deep into our minds and hearts to give us memorable characters that leave the stage with us. Ben currently holds a performance art degree from Savannah College School of Art and Design."]])
+    [:p.text.mt "Ben is a professional actor with experience in a wide selection of mediums such as theater, film, TV, and movies. He breathes life into characters by incorporating both technical acting techniques and his personal artistic vision to delight and inspire audiences. Like many great actors, Ben works hard to provide strong characterization into every element in both grand movements and subtle ticks to create memorable characters that reach deep within our minds and souls. Ben currently holds a Bachelors in Performing Arts degree from Savannah College School of Art and Design."]])
 
 (defn links
   []
@@ -27,7 +27,11 @@
     [:a.btn.links__link
       {:href "https://www.imdb.com/name/nm5528224/"}
       [:i.inline.fab.fa-imdb]
-      "View Credits"]])
+      "View Credits"]
+    [:a.btn.links__link
+      {:href "mailto:benfrankenberg@gmail.com"}
+      [:i.inline.far.fa-envelope]
+      "Email Ben"]])
 
 (defn about
   []
