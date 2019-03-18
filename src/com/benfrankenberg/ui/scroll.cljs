@@ -5,5 +5,5 @@
 (defn scroll
   [el]
   (-> (.fromEvent bacon el "scroll")
-      (.map #(.-scrollY js/window))
-      (.subscribe (.-log js/console))))
+      (.map #(.-scrollY el))
+      (.onValue (.-log js/console))))
