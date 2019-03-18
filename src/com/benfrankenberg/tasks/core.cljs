@@ -1,6 +1,7 @@
 (ns src.com.benfrankenberg.tasks.core
  (:require
   [src.com.benfrankenberg.tasks.assets]
+  [src.com.benfrankenberg.tasks.clojurescript]
   [src.com.benfrankenberg.tasks.content]
   [src.com.benfrankenberg.tasks.images]
   [src.com.benfrankenberg.tasks.serve]

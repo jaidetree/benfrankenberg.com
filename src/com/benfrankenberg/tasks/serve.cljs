@@ -11,5 +11,6 @@
 (.task gulp "serve"
   (fn
     []
-    (.init browser-sync #js {:watch true
+    (.init browser-sync #js {:watch false
+                             :open false
                              :server "./dist"})))

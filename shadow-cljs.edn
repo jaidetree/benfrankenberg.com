@@ -1,0 +1,8 @@
+{;:lein true
+ :dependencies []
+ :source-paths ["src"]
+ :builds {:app {:target :browser
+                :output-to "dist/js/app.js"
+                :output-dir "dist/js"
+                :asset-path "/js"
+                :modules {:app {:entries [com.benfrankenberg.ui.app]}}}}}

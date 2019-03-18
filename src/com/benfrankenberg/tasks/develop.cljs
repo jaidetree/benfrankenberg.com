@@ -72,7 +72,6 @@
 (defn refresh
   [source]
   (-> source
-      (.filter (glob? ["dist/img/**/*.{jpg,png}"]))
       (.debounce 100)
       (.tap #(.reload browser-sync))))
 

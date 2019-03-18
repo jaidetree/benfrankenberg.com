@@ -75,5 +75,7 @@
         [:div.page
           (list (background)
                 (hero)
-                (about))]]]))
+                (about))]
+        [:script {:src "https://cdnjs.cloudflare.com/ajax/libs/bacon.js/2.0.11/Bacon.min.js"}]
+        [:script {:src "/js/app.js"}]]]))
 
