@@ -2,7 +2,9 @@
   (:require
     [src.com.benfrankenberg.tasks.lib.cache :refer [cache-file file-updated? hash-file]]
     [src.com.benfrankenberg.tasks.lib.util :refer [base glob?]]
+    [src.com.benfrankenberg.tasks.lib.stream :as stream]
     [src.com.benfrankenberg.tasks.assets :refer [copy-public-file src-public]]
+    [src.com.benfrankenberg.tasks.scripts :refer [cljs->js]]
     [src.com.benfrankenberg.tasks.content :refer [hiccup->html src-hiccup]]
     [src.com.benfrankenberg.tasks.images :refer [optimize-images src-images]]
     [src.com.benfrankenberg.tasks.style :refer [scss->css src-scss]]
@@ -92,15 +94,16 @@
         (start-with (Vinyl. #js {:path "." :basename "root"}))
         (.flatMap #(src % [src-scss
                            src-hiccup
-                           src-images]))
-                           ;; src-public]))
+                           src-images
+                           src-public]))
         (.tap hash-file)
         (.filter file-updated?)
         (.tap cache-file)
         (build [scss->css
                 hiccup->html
-                optimize-images])
-                ;;copy-public-file])
+                optimize-images
+                copy-public-file])
+        (stream/merge [(cljs->js)])
         (.filter built?)
         (.errors report-error)
         (dest "./dist")
