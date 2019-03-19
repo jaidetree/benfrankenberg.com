@@ -5,5 +5,6 @@
                 :output-dir "dist/js"
                 :asset-path "/js"
                 :devtools {:after-load com.benfrankenberg.app.core/reload!}
-                :modules {:app {:entries [com.benfrankenberg.app.core]}}
+                :modules {:app {:entries [com.benfrankenberg.app.core]
+                                :init-fn com.benfrankenberg.app.core/init!}}
                 :release {:compiler-options {:optimizations :advanced}}}}}

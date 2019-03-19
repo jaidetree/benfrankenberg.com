@@ -8,7 +8,7 @@
 
 (defn init!
   []
-  (scroll js/window))
+  (scroll))
 
 (defn reload!
   []

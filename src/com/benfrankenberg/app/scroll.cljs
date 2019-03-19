@@ -9,6 +9,10 @@
   [selector]
   (.querySelector js/document selector))
 
+(defn query-all
+  [selector]
+  (.from js/Array (.querySelectorAll js/document selector)))
+
 (defn pick
   [o keys]
   (->> keys
@@ -30,6 +34,7 @@
 
 (defn scroll->percent
   [scroll-y target-y]
+  (println {:scroll scroll-y :target target-y})
   (->> scroll-y
        (+ target-y)
        (/ scroll-y)
@@ -43,11 +48,24 @@
               (query ".hero")]]
    (set! (-> el (.-style) (.-opacity)) opacity)))
 
+(defn scroll-top
+  [e]
+  (->> [(.-documentElement js/document)
+        (.-body js/document)]
+       (map #(.-scrollTop %))
+       (apply max)))
+
 (defn scroll
-  [el]
-  (-> (.fromEvent bacon el "scroll")
-      (.map #(.-scrollY el))
+  []
+  (-> (.fromEvent bacon js/window "scroll")
+      (.map scroll-top)
+      (.log "opacity")
       (.map #(scroll->percent % (top ".section.about")))
       (.takeUntil bus)
-      (.log "opacity")
       (.onValue update-hero-opacity)))
+
+(comment
+  (-> (query-all "*")
+      (.filter #(> (.-scrollTop %) 0))
+      (.map #(str (.-tagName %) "." (.-className %)))))
+

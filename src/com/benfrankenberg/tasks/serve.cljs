@@ -13,4 +13,5 @@
     []
     (.init browser-sync #js {:watch false
                              :open false
+                             :ghostMode false
                              :server "./dist"})))
