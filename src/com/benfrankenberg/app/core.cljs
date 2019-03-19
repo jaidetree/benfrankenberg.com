@@ -1,14 +1,13 @@
 (ns com.benfrankenberg.app.core
   (:require
-    [com.benfrankenberg.app.scroll :refer [scroll]]
+    [com.benfrankenberg.app.scroll :refer [scroll-hero-opacity]]
     [com.benfrankenberg.app.state :refer [bus]]))
 
 
 (def bacon (.-Bacon js/window))
-
 (defn init!
   []
-  (scroll))
+  (scroll-hero-opacity))
 
 (defn reload!
   []

@@ -34,7 +34,6 @@
 
 (defn scroll->percent
   [scroll-y target-y]
-  (println {:scroll scroll-y :target target-y})
   (->> scroll-y
        (+ target-y)
        (/ scroll-y)
@@ -42,30 +41,29 @@
        (max 0)
        (- 1)))
 
-(defn update-hero-opacity
-  [opacity]
-  (doseq [el [(query ".background")
-              (query ".hero")]]
-   (set! (-> el (.-style) (.-opacity)) opacity)))
-
 (defn scroll-top
-  [e]
-  (->> [(.-documentElement js/document)
-        (.-body js/document)]
+  [selectors]
+  (->> selectors
+       (map query)
        (map #(.-scrollTop %))
        (apply max)))
 
-(defn scroll
+(defn update-opacity
+  [selectors opacity]
+  (let [els (map query selectors)]
+    (doseq [el els]
+      (set! (-> el (.-style) (.-opacity)) opacity))))
+
+(defn scroll-hero-opacity
   []
   (-> (.fromEvent bacon js/window "scroll")
-      (.map scroll-top)
-      (.log "opacity")
+      (.merge (.once bacon (.now js/Date)))
+      (.map #(scroll-top ["html" "body"]))
       (.map #(scroll->percent % (top ".section.about")))
       (.takeUntil bus)
-      (.onValue update-hero-opacity)))
+      (.onValue #(update-opacity [".background" ".hero"] %))))
 
 (comment
   (-> (query-all "*")
       (.filter #(> (.-scrollTop %) 0))
       (.map #(str (.-tagName %) "." (.-className %)))))
-
