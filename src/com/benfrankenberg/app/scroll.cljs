@@ -57,7 +57,7 @@
 (defn scroll-hero-opacity
   []
   (-> (.fromEvent bacon js/window "scroll")
-      (.merge (.once bacon (.now js/Date)))
+      (.startWith (.now js/Date))
       (.map #(scroll-top ["html" "body"]))
       (.map #(scroll->percent % (top ".section.about")))
       (.takeUntil bus)
