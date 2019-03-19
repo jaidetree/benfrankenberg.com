@@ -4,5 +4,6 @@
                 :output-to "dist/js/app.js"
                 :output-dir "dist/js"
                 :asset-path "/js"
-                :modules {:app {:entries [com.benfrankenberg.ui.app]}}
+                :devtools {:after-load com.benfrankenberg.app.core/reload!}
+                :modules {:app {:entries [com.benfrankenberg.app.core]}}
                 :release {:compiler-options {:optimizations :advanced}}}}}
