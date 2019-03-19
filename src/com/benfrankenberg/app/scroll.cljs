@@ -1,17 +1,10 @@
 (ns com.benfrankenberg.app.scroll
   (:require
+    [goog.object :as obj]
     [com.benfrankenberg.app.state :refer [bus]]
-    [goog.object :as obj]))
+    [com.benfrankenberg.app.util :refer [query query-all]]))
 
 (def bacon (.-Bacon js/window))
-
-(defn query
-  [selector]
-  (.querySelector js/document selector))
-
-(defn query-all
-  [selector]
-  (.from js/Array (.querySelectorAll js/document selector)))
 
 (defn pick
   [o keys]
@@ -62,8 +55,3 @@
       (.map #(scroll->percent % (top ".section.about")))
       (.takeUntil bus)
       (.onValue #(update-opacity [".background" ".hero"] %))))
-
-(comment
-  (-> (query-all "*")
-      (.filter #(> (.-scrollTop %) 0))
-      (.map #(str (.-tagName %) "." (.-className %)))))
