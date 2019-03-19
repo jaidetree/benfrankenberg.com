@@ -11,12 +11,16 @@
   width: 52vw;
 }
 
-.btn {
-  display: inline-block;
-}
-
 .group {
   margin-bottom: rems(64px);
+}
+
+.links__link.resume,
+.links__link.credits {
+  flex: 0 1 48%;
+}
+.links__link.email {
+  flex: 0 1 100%;
 }
 
 .profile-photo {

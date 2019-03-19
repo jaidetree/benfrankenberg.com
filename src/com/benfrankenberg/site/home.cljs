@@ -20,15 +20,15 @@
 (defn links
   []
   [:div.links
-    [:a.btn.links__link
+    [:a.btn.links__link.resume
       {:href "/downloads/benjamin-frankenberg-resume.pdf"}
       [:i.inline.fa.fa-file-pdf]
       "Download Resume"]
-    [:a.btn.links__link
+    [:a.btn.links__link.credits
       {:href "https://www.imdb.com/name/nm5528224/"}
       [:i.inline.fab.fa-imdb]
       "View Credits"]
-    [:a.btn.links__link
+    [:a.btn.links__link.email
       {:href "mailto:benfrankenberg@gmail.com"}
       [:i.inline.far.fa-envelope]
       "Email Ben"]])

@@ -68,6 +68,7 @@ a:hover {
   @extend %body-font;
   color: #788C6C;
   color: #80A36C;
+  color: #90A29B;
   font-size: rems(20px);
   line-height: 1.8;
 }
@@ -92,15 +93,20 @@ a:hover {
 }
 
 .btn {
+  display: inline-block;
   border: rems(1px) solid #F0B94D;
   padding: rems(16px) rems(24px);
   border-radius: rems(3px);
   color: #F0B94D;
   font-size: rems(20px);
+  text-align: center;
 }
 .btn:hover {
   background: rgba(#F0B94D, 0.2);
   text-decoration: none;
+}
+.btn [class*="fa-"] {
+  font-size: rems(24px);
 }
 
 .column {
