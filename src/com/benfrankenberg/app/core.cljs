@@ -6,9 +6,12 @@
 
 (def bacon (.-Bacon js/window))
 
-(scroll js/window)
+(defn init!
+  []
+  (scroll js/window))
 
 (defn reload!
   []
   (println "Reloading!")
-  (.push bus (.now js/Date)))
+  (.push bus (.now js/Date))
+  (init!))

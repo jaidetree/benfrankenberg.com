@@ -15,14 +15,6 @@
   margin-bottom: rems(64px);
 }
 
-.links__link.resume,
-.links__link.credits {
-  flex: 0 1 48%;
-}
-.links__link.email {
-  flex: 0 1 100%;
-}
-
 .profile-photo {
   position: absolute;
   top: 0;
@@ -41,4 +33,25 @@
 .section {
   display: flex;
   flex-flow: row nowrap;
+}
+
+// Media Queries
+// ---------------------------------------------------------------------------
+
+@media (max-width: 1200px) {
+  .links__link.resume,
+  .links__link.credits,
+  .links__link.email {
+    flex: 1 1 100%;
+  }
+}
+
+@media (min-width: 1200px) {
+  .links__link.resume,
+  .links__link.credits {
+    flex: 0 1 48%;
+  }
+  .links__link.email {
+    flex: 1 1 100%;
+  }
 }

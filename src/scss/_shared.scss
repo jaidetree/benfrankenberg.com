@@ -1,4 +1,5 @@
 // Utils
+
 // ---------------------------------------------------------------------------
 @function rems ($px) {
   @return $px/16px * 1rem;
@@ -6,6 +7,24 @@
 
 @function black ($percent) {
   @return darken(white, $percent);
+}
+
+@mixin media ($min-width: null, $max-width: null) {
+  @if $min-width and not $max-width {
+    @media (min-width: #{rems($min-width - 1)}) {
+      @content;
+    }
+  }
+  @else if not $min-width and $max-width {
+    @media (max-width: #{rems($max-width)}) {
+      @content;
+    }
+  }
+  @else if $min-width and $max-width {
+    @media (min-width: #{rems($min-width - 1)}) and (max-width: #{rems($max-width)}) {
+      @content;
+    }
+  }
 }
 
 // Typography
