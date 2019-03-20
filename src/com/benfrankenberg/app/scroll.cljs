@@ -1,6 +1,7 @@
 (ns com.benfrankenberg.app.scroll
   (:require
     [goog.object :as obj]
+    [com.benfrankenberg.app.raf :refer [next-frame]]
     [com.benfrankenberg.app.state :refer [bus]]
     [com.benfrankenberg.app.util :refer [query query-all]]))
 
@@ -50,6 +51,7 @@
 (defn scroll-hero-opacity
   []
   (-> (.fromEvent bacon js/window "scroll")
+      (.flatMapLatest next-frame)
       (.startWith (.now js/Date))
       (.map #(scroll-top ["html" "body"]))
       (.map #(scroll->percent % (top ".section.about")))
