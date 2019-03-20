@@ -14,6 +14,9 @@ html, body {
   -ms-text-size-adjust: none;
 }
 
+html {
+}
+
 body, a, p, input {
   @extend %body-font;
 }
@@ -89,6 +92,7 @@ a:hover {
   background: url(/img/ben_hero.jpg);
   background-size: cover;
   background-position: 25% 30%;
+  background-repeat: no-repeat;
   z-index: -1;
 }
 
@@ -121,9 +125,6 @@ a:hover {
 }
 .hero__inner {
   position: absolute;
-  right: 2vw;
-  bottom: 2vw;
-  padding: 2vw;
   z-index: 5;
 }
 .hero__title {
@@ -144,6 +145,9 @@ a:hover {
 }
 .links__link {
   margin-bottom: rems(24px);
+}
+
+.page {
 }
 
 .section {

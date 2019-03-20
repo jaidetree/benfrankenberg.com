@@ -23,6 +23,12 @@ h1, h2 {
   margin-bottom: rems(32px);
 }
 
+.hero__inner {
+  left: rems(16px);
+  bottom: rems(88px);
+  z-index: 5;
+}
+
 .profile-photo__img {
   display: block;
   width: 100%;
