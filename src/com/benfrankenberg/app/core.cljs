@@ -7,30 +7,9 @@
 
 (def bacon (.-Bacon js/window))
 
-(defn update-hero-height
-  [height]
-  (let [els (map query [".hero" ".background"])]
-    (doseq [el els]
-      (set! (.-height (.-style el)) (str height "px")))))
-
-(defn screen-height
-  []
-  (let [outer (.-outerHeight js/window)
-        inner (.-innerHeight js/window)
-        screen (-> js/window (.-screen) (.-availHeight))]
-    (if (zero? outer)
-      screen
-      inner)))
-
 (defn init!
   []
-  (scroll-hero-opacity)
-  (-> (.fromEvent bacon js/window "resize")
-      (.startWith (.now js/Date))
-      (.map screen-height)
-      (.log)
-      (.takeUntil bus)
-      (.onValue update-hero-height)))
+  (scroll-hero-opacity))
 
 (defn reload!
   []

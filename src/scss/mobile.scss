@@ -9,6 +9,10 @@ h1, h2 {
 
 // Blocks
 // ---------------------------------------------------------------------------
+.background {
+  height: 100vh;
+  max-height: rems(720px);
+}
 
 .desktop {
   display: none;
@@ -23,6 +27,10 @@ h1, h2 {
   margin-bottom: rems(32px);
 }
 
+.hero {
+  height: 100vh;
+  max-height: rems(720px);
+}
 .hero__inner {
   left: rems(16px);
   bottom: rems(88px);

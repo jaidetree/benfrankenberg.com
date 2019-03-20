@@ -11,10 +11,17 @@
   width: 52vw;
 }
 
+.background {
+  height: 100vh;
+}
+
 .group {
   margin-bottom: rems(64px);
 }
 
+.hero {
+  height: 100vh;
+}
 .hero__inner {
   right: rems(64px);
   bottom: rems(64px);

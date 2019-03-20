@@ -87,7 +87,6 @@ a:hover {
   position: fixed;
   top: 0;
   left: 0;
-  bottom: 0;
   right: 0;
   background: url(/img/ben_hero.jpg);
   background-size: cover;
@@ -121,7 +120,6 @@ a:hover {
 
 .hero {
   position: relative;
-  height: 100vh;
 }
 .hero__inner {
   position: absolute;
@@ -153,7 +151,6 @@ a:hover {
 .section {
   position: relative;
   min-height: 100vh;
-  margin-top: rems(120px);
   padding: 0;
   background: rgba(#404134, 0.9);
   background: #393a2c;
