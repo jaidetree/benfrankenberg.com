@@ -33,6 +33,32 @@
       [:i.inline.far.fa-envelope]
       "Email Ben"]])
 
+(defn headshot
+  [_ idx]
+  (let [src (str "/img/ben-frankenberg-headshot-" idx ".jpg")]
+    [:div.headshot
+      {:style {:background-image (str "url(" src ")")}
+       :class (when (= idx 1) "active")}
+      [:img.headshot__img {:alt (str "Headshot #" idx " of Ben Frankenberg")
+                           :src src}]
+      [:a.btn.headshot__download
+        {:href src}
+        [:i.inline.fas.fa-download]
+        "Download"]]))
+
+(defn headshots
+  [_ idxs]
+  [:div.headshots
+    [:ul.headshots__list
+      [:li.headshots__item
+        (for [idx idxs]
+          [headshot idx])]]
+    [:div.headshots__ui
+      [:button.headshots__btn.prev
+        [:i.fas.fa-chevron-left]]
+      [:button.headshots__btn.next
+        [:i.fas.fa-chevron-right]]]])
+
 (defn about
   []
   [:section.section.about
@@ -40,8 +66,7 @@
       (bio)
       (links)]
     [:div.column.about__headshot
-      [:div.profile-photo
-        [:img.profile-photo__img {:src "/img/ben_hero.jpg"}]]]])
+      [headshots [1 2 3]]]])
 
 (defn render
   []
