@@ -49,14 +49,16 @@
 (defn headshots
   [_ idxs]
   [:div.headshots
-    [:ul.headshots__list
-      [:li.headshots__item
+    [:ul.headshots__list.slides
+      [:li.headshots__item.slide
         (for [idx idxs]
           [headshot idx])]]
     [:div.headshots__ui
       [:button.headshots__btn.prev
+        {:value "prev"}
         [:i.fas.fa-chevron-left]]
       [:button.headshots__btn.next
+        {:value "next"}
         [:i.fas.fa-chevron-right]]]])
 
 (defn about

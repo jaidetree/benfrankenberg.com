@@ -1,9 +1,13 @@
 (ns com.benfrankenberg.app.util)
 
 (defn query
-  [selector]
-  (.querySelector js/document selector))
+  ([selector]
+   (query js/document selector))
+  ([container selector]
+   (.querySelector container selector)))
 
 (defn query-all
-  [selector]
-  (.from js/Array (.querySelectorAll js/document selector)))
+  ([selector]
+   (query-all js/document selector))
+  ([container selector]
+   (.from js/Array (.querySelectorAll container selector))))

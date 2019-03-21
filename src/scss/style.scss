@@ -120,13 +120,23 @@ a:hover {
 
 .headshot__download {
   position: absolute;
-  left: 0;
-  right: 0;
+  right: rems(32px);
   bottom: rems(32px);
-  min-width: rems(200px);
-  max-width: rems(300px);
-  margin: auto;
+  border-radius: 50%;
+  width: rems(48px);
+  height: rems(48px);
+  padding: 0;
+  padding-left: rems(10px);
+  padding-top: rems(8px);
+  text-align: left;
   white-space: nowrap;
+  overflow: hidden;
+  transition: all 250ms ease-in-out;
+}
+.headshot__download:hover {
+  padding: rems(8px) rems(16px);
+  width: rems(170px);
+  border-radius: 0;
 }
 
 .headshots {
