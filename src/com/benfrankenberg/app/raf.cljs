@@ -31,8 +31,13 @@
   [value]
   (-> (.fromBinder bacon
         (fn create [cb]
-          (let [id (raf #(do (cb %)
-                             (cb (new End))))]
+          (let [id (raf (fn []
+                         (raf #(do (cb %)
+                                   (cb (End.))))))]
             (fn cancel []
               (kill-raf id)))))
       (.map value)))
+
+(defn delay-frame
+  [source]
+  (.sampledBy source (next-frame 1)))

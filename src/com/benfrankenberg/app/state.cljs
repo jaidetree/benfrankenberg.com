@@ -14,10 +14,10 @@
         ((get reducer-map action-type) db action)
         db))))
 
-(defn combine-epics
-  [epic-fns]
+(defn combine-fx
+  [fxs]
   (fn [actions state]
-    (-> (.fromArray bacon (clj->js epic-fns))
+    (-> (.fromArray bacon (clj->js fxs))
         (.flatMap #(% actions state))
         (.takeUntil bus))))
 
@@ -27,8 +27,16 @@
       (.takeUntil bus)
       (.onValue dispatch)))
 
+;; Public API
+;; ---------------------------------------------------------------------------
+
+(defn action?
+  [actions expected-type]
+  (-> actions
+      (.filter #(= (:type %) expected-type))))
+
 (defn create-store
-  [initial reducer-map epics]
+  [initial reducer-map fx]
   (let [actions (Bus.)
         dispatch #(.push actions %)
         state (-> actions
@@ -37,13 +45,14 @@
                   (.takeUntil bus)
                   (.doAction #(println "resulting state" %)))]
     (.subscribe state identity)
-    (handle-fx (combine-epics epics) actions state dispatch)
+    (handle-fx (combine-fx fx) actions state dispatch)
     (dispatch {:type :initialize :data {}})
     {:dispatch dispatch
      :actions actions
      :state state}))
 
-(defn action?
-  [actions expected-type]
-  (-> actions
-      (.filter #(= (:type %) expected-type))))
+(defn gen-action
+  ([type]
+   (fn [data] (gen-action type data)))
+  ([type data]
+   {:type type :data data}))

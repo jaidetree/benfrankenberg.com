@@ -118,72 +118,6 @@ a:hover {
   padding: rems(32px);
 }
 
-.headshot__download {
-  position: absolute;
-  right: rems(32px);
-  bottom: rems(32px);
-  border-radius: rems(32px);
-  width: rems(48px);
-  height: rems(48px);
-  padding: 0;
-  padding-left: rems(10px);
-  padding-top: rems(8px);
-  text-align: left;
-  white-space: nowrap;
-  overflow: hidden;
-  transition: all 250ms ease-in-out;
-}
-.headshot__download:hover {
-  padding: rems(8px) rems(17px);
-  width: rems(170px);
-  border-radius: rems(3px);
-}
-
-.headshots {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-}
-.headshots__ui {
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  height: rems(48px);
-  margin: auto rems(32px);
-  z-index: 3;
-}
-.headshots__btn {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: rems(48px);
-  height: rems(48px);
-  margin: auto;
-  background: none;
-  border-radius: 50%;
-  border: 1px solid #efb857;
-  color: #efb857;
-  font-size: rems(24px);
-  text-align: center;
-  outline: none;
-  opacity: 0.5;
-  transition: all 250ms ease-in-out;
-}
-.headshots__btn:hover {
-  opacity: 1;
-  background: rgba(#efb857, 0.25);
-}
-.headshots__btn.prev {
-  left: 0;
-}
-.headshots__btn.next {
-  right: 0;
-}
-
 .hero {
   position: relative;
 }
@@ -222,3 +156,6 @@ a:hover {
   background: #393a2c;
   background: #121413;
 }
+
+@import "blocks/headshot";
+@import "blocks/headshots";

@@ -38,8 +38,7 @@
   (let [src (str "/img/ben-frankenberg-headshot-" idx ".jpg")]
     [:div.headshot
       {:style {:background-image (str "url(" src ")")}
-       :class (when (= idx 1) "active")
-       :data-id idx}
+       :class (when (= idx 1) "active")}
       [:img.headshot__img {:alt (str "Headshot #" idx " of Ben Frankenberg")
                            :src src}]
       [:a.btn.headshot__download
@@ -53,6 +52,7 @@
     [:ul.headshots__list.slides
      (for [idx idxs]
        [:li.headshots__item.slide
+        {:data-id idx}
         [headshot idx]])]
     [:div.headshots__ui
       [:button.headshots__btn.prev
