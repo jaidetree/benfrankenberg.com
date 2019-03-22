@@ -38,7 +38,8 @@
   (let [src (str "/img/ben-frankenberg-headshot-" idx ".jpg")]
     [:div.headshot
       {:style {:background-image (str "url(" src ")")}
-       :class (when (= idx 1) "active")}
+       :class (when (= idx 1) "active")
+       :data-id idx}
       [:img.headshot__img {:alt (str "Headshot #" idx " of Ben Frankenberg")
                            :src src}]
       [:a.btn.headshot__download
@@ -50,9 +51,9 @@
   [_ idxs]
   [:div.headshots
     [:ul.headshots__list.slides
-      [:li.headshots__item.slide
-        (for [idx idxs]
-          [headshot idx])]]
+     (for [idx idxs]
+       [:li.headshots__item.slide
+        [headshot idx]])]
     [:div.headshots__ui
       [:button.headshots__btn.prev
         {:value "prev"}
@@ -105,4 +106,3 @@
                 (about))]
         [:script {:src "https://cdnjs.cloudflare.com/ajax/libs/bacon.js/2.0.11/Bacon.min.js"}]
         [:script {:src "/js/app.js"}]]]))
-

@@ -33,7 +33,6 @@
         dispatch #(.push actions %)
         state (-> actions
                   (.doAction #(println "incoming action" %))
-                  (.take 10)
                   (.scan initial (combine-reducers reducer-map))
                   (.takeUntil bus)
                   (.doAction #(println "resulting state" %)))]
@@ -48,5 +47,3 @@
   [actions expected-type]
   (-> actions
       (.filter #(= (:type %) expected-type))))
-
-

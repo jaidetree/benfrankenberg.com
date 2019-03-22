@@ -122,7 +122,7 @@ a:hover {
   position: absolute;
   right: rems(32px);
   bottom: rems(32px);
-  border-radius: 50%;
+  border-radius: rems(32px);
   width: rems(48px);
   height: rems(48px);
   padding: 0;
@@ -134,9 +134,9 @@ a:hover {
   transition: all 250ms ease-in-out;
 }
 .headshot__download:hover {
-  padding: rems(8px) rems(16px);
+  padding: rems(8px) rems(17px);
   width: rems(170px);
-  border-radius: 0;
+  border-radius: rems(3px);
 }
 
 .headshots {

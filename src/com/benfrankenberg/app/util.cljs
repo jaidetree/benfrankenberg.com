@@ -10,4 +10,4 @@
   ([selector]
    (query-all js/document selector))
   ([container selector]
-   (.from js/Array (.querySelectorAll container selector))))
+   (js->clj (.from js/Array (.querySelectorAll container selector)))))

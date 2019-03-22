@@ -16,39 +16,82 @@
     - Initial index is .active"
 
 (defn query-initial-index
-  [container selector]
-  (some->> (query-all container selector)
+  [slides]
+  (some->> slides
            (map-indexed vector)
            (filter (fn [[_ el]] (.includes (.-className el) "active")))
            (first)
            (first)))
 
-(def reducers {:rotated (fn [db action]
-                          (assoc db :current (:data action)))})
+(def reducers {:rotated      (fn [db action]
+                               (assoc db :current (:data action)))
+               :count-slides (fn [db {:keys [data]}]
+                               (assoc db :total data))
+               :rotate       (fn [db {:keys [data]}]
+                               (merge db data))})
 
-(defn rotate-fx
-  [actions]
+(defn with-latest-from
+  [source secondary]
+  (-> source
+      (.flatMap (fn [x]
+                  (-> (.once bacon x)
+                      (.zip (.take secondary 1) vector))))))
+
+(defn next-idx
+  [idx total]
+  (if (> idx total) 1 idx))
+
+(defn next-slide
+  [actions state]
   (-> actions
       (action? :next)
-      (.map #(merge % {:type :rotate :data {:current (:data %)
-                                            :to (inc (:data %))}}))))
+      (with-latest-from state)
+      (.map (fn [[_ {:keys [total current]}]]
+              (let [idx (next-idx (inc current) total)]
+                (merge  {:type :rotate
+                         :data {:current idx
+                                :direction :forwards
+                                :from current
+                                :to idx}}))))))
 
-(def epics [rotate-fx])
+(defn prev-idx
+  [idx total]
+  (if (<= idx 0) total idx))
+
+(defn prev-slide
+  [actions state]
+  (-> actions
+      (action? :prev)
+      (with-latest-from state)
+      (.map (fn [[_ {:keys [current total]}]]
+              (let [idx (prev-idx (dec current) total)]
+                (merge  {:type :rotate
+                         :data {:current idx
+                                :direction :backwards
+                                :from current
+                                :to idx}}))))))
+
+(defn rotate
+  [])
+
+(def epics [next-slide
+            prev-slide])
 
 (defn ui-events
   [container]
   (-> #js [(.fromEvent bacon (query container ".next") "click")
            (.fromEvent bacon (query container ".prev") "click")]
-      (->> (.concatAll bacon))
+      (->> (.mergeAll bacon))
       (.map #(-> % (.-currentTarget) (.-value)))))
 
 (defn rotator
   [selector]
   (let [container (query selector)
-        index (or (query-initial-index container ".slide") 1)
+        slides (query-all container ".slide")
+        index (or (query-initial-index slides) 1)
         {:keys [dispatch state] :as store} (create-store {:current index} reducers epics)]
+    (dispatch {:type :count-slides :data (count slides)})
     (-> (ui-events container)
-        (.zip state #(hash-map :type (keyword %1) :data (:current %2)))
         (.takeUntil bus)
-        (.onValue #(dispatch %)))
+        (.onValue #(dispatch {:type (keyword %) :data nil})))
     store))
