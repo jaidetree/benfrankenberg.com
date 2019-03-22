@@ -1,7 +1,7 @@
 (ns com.benfrankenberg.app.rotator
   (:require
-   [com.benfrankenberg.app.util :refer [query query-all]]
-   [com.benfrankenberg.app.state :refer [bus create-store action?]]))
+   [com.benfrankenberg.app.state :refer [bus create-store action?]]
+   [com.benfrankenberg.app.util :refer [query query-all with-latest-from]]))
 
 (def bacon (.-Bacon js/window))
 (def Bus (.-Bus bacon))
@@ -15,13 +15,8 @@
        :to 2}
     - Initial index is .active"
 
-(defn query-initial-index
-  [slides]
-  (some->> slides
-           (map-indexed vector)
-           (filter (fn [[_ el]] (.includes (.-className el) "active")))
-           (first)
-           (first)))
+;; Utils
+;; ---------------------------------------------------------------------------
 
 (def reducers {:rotated      (fn [db action]
                                (assoc db :current (:data action)))
@@ -30,16 +25,24 @@
                :rotate       (fn [db {:keys [data]}]
                                (merge db data))})
 
-(defn with-latest-from
-  [source secondary]
-  (-> source
-      (.flatMap (fn [x]
-                  (-> (.once bacon x)
-                      (.zip (.take secondary 1) vector))))))
+(defn query-initial-index
+  [slides]
+  (some->> slides
+           (map-indexed vector)
+           (filter (fn [[_ el]] (.includes (.-className el) "active")))
+           (first)
+           (first)))
 
 (defn next-idx
   [idx total]
   (if (> idx total) 1 idx))
+
+(defn prev-idx
+  [idx total]
+  (if (<= idx 0) total idx))
+
+;; Next
+;; ---------------------------------------------------------------------------
 
 (defn next-slide
   [actions state]
@@ -53,10 +56,6 @@
                                 :direction :forwards
                                 :from current
                                 :to idx}}))))))
-
-(defn prev-idx
-  [idx total]
-  (if (<= idx 0) total idx))
 
 (defn prev-slide
   [actions state]
