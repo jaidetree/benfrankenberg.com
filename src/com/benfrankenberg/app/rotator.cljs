@@ -8,6 +8,16 @@
 (def bacon (.-Bacon js/window))
 (def Bus (.-Bus bacon))
 
+(defn stream-of
+  [source]
+  (.once bacon source))
+
+(defn stream-from
+  [source]
+  (cond (sequential? source)       (stream-from (clj->js source))
+        (.isArray js/Array source) (.fromArray bacon source)
+        :else                      (stream-from [source])))
+
 "How should the rotator work?
   - Call (rotator \".rotator\")
   - Create a property stream to store state
@@ -20,11 +30,13 @@
 ;; Reducers
 ;; ---------------------------------------------------------------------------
 
-(def reducers {:rotated      (fn [db {:keys [data]}]
+(def reducers {:rotate       (fn [db {:keys [data]}]
                                (merge db data))
-               :count-slides (fn [db {:keys [data]}]
-                               (assoc db :total data))
-               :rotate       (fn [db {:keys [data]}]
+               :rotated      (fn [db {:keys [data]}]
+                               (merge db {:current data
+                                          :from nil
+                                          :to nil}))
+               :start        (fn [db {:keys [data]}]
                                (merge db data))})
 
 ;; Utils
@@ -46,40 +58,68 @@
   [idx total]
   (if (<= idx 0) total idx))
 
+(defn el->classes
+  [el]
+  (-> (.-className el)
+      (split #" ")
+      (set)))
 
-
-(defn toggle-class
+(defn toggle-class!
   [el & class-names]
   (let [classes (reduce (fn [classes class-name]
-                          (if (contains? (set classes) class-name)
-                            (->> classes
-                                (remove #(= % class-name)))
-                            (-> classes
-                                (conj class-name))))
-                        (split (.-className el) #" ")
+                          (if (contains? classes class-name)
+                            (disj classes class-name)
+                            (conj classes class-name)))
+                        (el->classes el)
                         class-names)]
     (set! (.-className el) (join " " classes))
     el))
 
+(defn remove-classes!
+  [el target-classes]
+  (set! (.-className el)
+        (->> el
+             (el->classes)
+             (remove (set target-classes))
+             (join " "))))
+
+(defn add-classes!
+  [el target-classes]
+  (set! (.-className el)
+        (->> el
+             (el->classes)
+             (into (set target-classes))
+             (join " "))))
+
+(defn swap-class!
+  [container el & class-names]
+  (let [target-classes (str "." (join "." class-names))]
+    (-> (query-all container target-classes)
+        (stream-from)
+        (.onValue #(remove-classes! % class-names)))
+    (add-classes! el class-names)
+    el))
+
 (defn prepare-transition
   [{:keys [from-el to-el direction-cls]}]
-  (toggle-class from-el "transition" "from" direction-cls)
-  (toggle-class to-el   "transition" "to"   direction-cls))
+  (toggle-class! from-el "transition" "from" direction-cls)
+  (toggle-class! to-el   "transition" "to"   direction-cls))
 
 (defn start-transition
   [{:keys [from-el to-el]}]
-  (toggle-class from-el "rotate")
-  (toggle-class to-el   "rotate"))
+  (toggle-class! from-el "rotate")
+  (toggle-class! to-el   "rotate"))
 
 (defn end-transition
   [{:keys [from-el to-el direction-cls]}]
-  (toggle-class from-el "transition" "from" "rotate" direction-cls)
-  (toggle-class to-el   "transition" "to"   "rotate" direction-cls))
+  (toggle-class! from-el "transition" "from" "rotate" direction-cls)
+  (toggle-class! to-el   "transition" "to"   "rotate" direction-cls))
 
 (defn rotate-slide-elements
-  [{:keys [direction from to] :as state}]
-  (let [from-el (query (str ".slide[data-id=\"" from "\"]"))
-        to-el   (query (str ".slide[data-id=\"" to "\"]"))]
+  [{:keys [direction from selector to] :as state}]
+  (let [container (query selector)
+        from-el (query container (str ".slide[data-id=\"" from "\"]"))
+        to-el   (query container (str ".slide[data-id=\"" to "\"]"))]
     (-> (.once bacon state)
         (.map #(merge % {:from-el from-el
                          :to-el to-el
@@ -89,7 +129,8 @@
         (.doAction start-transition)
         (.delay 1200)
         (.doAction end-transition)
-        (.map state))))
+        (.doAction #(swap-class! container to-el "active"))
+        (.map (constantly to)))))
 
 ;; Effects
 ;; ---------------------------------------------------------------------------
@@ -98,27 +139,27 @@
   [actions state]
   (-> actions
       (action? :next)
-      (with-latest-from state)
-      (.map (fn [[_ {:keys [total current]}]]
+      (.flatMapLatest #(.take state 1))
+      (.map (fn [{:keys [total current] :as db}]
               (let [idx (next-idx (inc current) total)]
                 (merge  {:type :rotate
-                         :data {:current idx
-                                :direction :forwards
-                                :from current
-                                :to idx}}))))))
+                         :data (assoc db :current idx
+                                         :from current
+                                         :to idx
+                                         :direction "forwards")}))))))
 
 (defn prev-slide
   [actions state]
   (-> actions
       (action? :prev)
-      (with-latest-from state)
-      (.map (fn [[_ {:keys [current total]}]]
+      (.flatMapLatest #(.take state 1))
+      (.map (fn [{:keys [current total] :as db}]
               (let [idx (prev-idx (dec current) total)]
                 (merge  {:type :rotate
-                         :data {:current idx
-                                :direction :backwards
-                                :from current
-                                :to idx}}))))))
+                         :data (assoc db :current idx
+                                         :from current
+                                         :to idx
+                                         :direction "backwards")}))))))
 
 (defn rotate
   [actions state]
@@ -149,7 +190,9 @@
         slides (query-all container ".slide")
         index (or (query-initial-index slides) 1)
         {:keys [dispatch state] :as store} (create-store {:current index} reducers fx)]
-    (dispatch {:type :count-slides :data (count slides)})
+    (dispatch {:type :start :data {:total (count slides)
+                                   :selector selector
+                                   :current 1}})
     (-> (ui-events container)
         (.takeUntil bus)
         (.onValue #(dispatch {:type (keyword %) :data nil})))

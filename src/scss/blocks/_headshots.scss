@@ -15,7 +15,7 @@
   right: 0;
   height: rems(48px);
   margin: auto rems(32px);
-  z-index: 3;
+  z-index: 200;
 }
 .headshots__btn {
   position: absolute;
@@ -53,23 +53,38 @@
   z-index: 0
 }
 
+.headshots__item.active {
+  z-index: 100;
+}
+
 .headshots__item.transition {
-  z-index: 3;
+  z-index: 100;
 }
 .headshots__item.rotate {
   transition: all 1200ms ease;
 }
 
-.headshots__item.forwards.from {
-  transform: translateX(0);
+.headshots__item.from {
+  transform: translatex(0);
 }
 .headshots__item.forwards.to {
-  transform: translateX(100%);
+  transform: translatex(100%);
 }
 
 .headshots__item.forwards.rotate.from {
-  transform: translateX(-100%);
+  transform: translatex(-100%);
 }
 .headshots__item.forwards.rotate.to {
-  transform: translateX(0);
+  transform: translatex(0);
+}
+
+.headshots__item.backwards.to {
+  transform: translatex(-100%);
+}
+
+.headshots__item.backwards.rotate.from {
+  transform: translatex(100%);
+}
+.headshots__item.backwards.rotate.to {
+  transform: translatex(0);
 }

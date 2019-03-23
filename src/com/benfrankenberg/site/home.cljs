@@ -37,8 +37,7 @@
   [_ idx]
   (let [src (str "/img/ben-frankenberg-headshot-" idx ".jpg")]
     [:div.headshot
-      {:style {:background-image (str "url(" src ")")}
-       :class (when (= idx 1) "active")}
+      {:style {:background-image (str "url(" src ")")}}
       [:img.headshot__img {:alt (str "Headshot #" idx " of Ben Frankenberg")
                            :src src}]
       [:a.btn.headshot__download
@@ -52,7 +51,8 @@
     [:ul.headshots__list.slides
      (for [idx idxs]
        [:li.headshots__item.slide
-        {:data-id idx}
+        {:data-id idx
+         :class (when (= idx 1) "active")}
         [headshot idx]])]
     [:div.headshots__ui
       [:button.headshots__btn.prev
@@ -69,7 +69,7 @@
       (bio)
       (links)]
     [:div.column.about__headshot
-      [headshots [1 2 3]]]])
+      [headshots [1 2 3 4]]]])
 
 (defn render
   []
