@@ -1,6 +1,6 @@
 (ns com.benfrankenberg.app.rotator
   (:require
-   [com.benfrankenberg.app.dom :refer [swap-class! toggle-class!]]
+   [com.benfrankenberg.app.dom :refer [add-classes! remove-classes! swap-class! toggle-class!]]
    [com.benfrankenberg.app.state :refer [action? bus create-store gen-action]]
    [com.benfrankenberg.app.stream :as stream]
    [com.benfrankenberg.app.util :refer [query query-all]]))
@@ -73,6 +73,38 @@
 ;; Effects
 ;; ---------------------------------------------------------------------------
 
+(defn button-events
+  [actions state]
+  (println "ui.event.buttons: init!")
+  (-> actions
+      (action? :start)
+      (.map #(get-in % [:data :selector]))
+      (.map #(query %))
+      (.flatMap
+       (fn [container]
+         (-> [(query container ".prev")
+              (query container ".next")]
+             (stream/from)
+             (.flatMap #(.fromEvent bacon % "click"))
+             (.map #(-> % (.-currentTarget) (.-value)))
+             (.map #(gen-action (keyword %) (str "." %))))))))
+
+(defn button-fx
+  [actions state]
+  (-> actions
+      (action? :prev :next)
+      (stream/with-latest-from state)
+      (.map (fn [[{button-selector :data} {:keys [selector]}]]
+              (let [container (query selector)]
+                (query container button-selector))))
+      (.flatMapLatest (fn [el]
+                        (-> (stream/of el)
+                            (stream/delay-frame)
+                            (.doAction #(add-classes! % ["active"]))
+                            (.delay 500)
+                            (.doAction #(remove-classes! % ["active"])))))
+      (.filter false)))
+
 (defn next-slide
   [actions state]
   (-> actions
@@ -108,16 +140,11 @@
       (.map (gen-action :rotated))))
 
 (def fx
-  [next-slide
+  [button-events
+   button-fx
+   next-slide
    prev-slide
    rotate])
-
-(defn ui-events
-  [container]
-  (-> #js [(.fromEvent bacon (query container ".next") "click")
-           (.fromEvent bacon (query container ".prev") "click")]
-      (->> (.mergeAll bacon))
-      (.map #(-> % (.-currentTarget) (.-value)))))
 
 ;; Public API
 ;; ---------------------------------------------------------------------------
@@ -127,11 +154,10 @@
   (let [container (query selector)
         slides (query-all container ".slide")
         index (or (query-initial-index slides) 1)
-        {:keys [dispatch state] :as store} (create-store {:current index} reducers fx)]
-    (dispatch {:type :start :data {:total (count slides)
-                                   :selector selector
-                                   :current 1}})
-    (-> (ui-events container)
-        (.takeUntil bus)
-        (.onValue #(dispatch {:type (keyword %) :data nil})))
+        store (create-store {:current index} reducers fx)
+        {:keys [dispatch state]} store]
+    (dispatch {:type :start
+               :data {:total (count slides)
+                      :selector selector
+                      :current 1}})
     store))

@@ -18,9 +18,11 @@
 (defn combine-fx
   [fxs]
   (fn [actions state]
-    (-> (stream/from fxs)
-        (.flatMap #(% actions state))
-        (.takeUntil bus))))
+    (as-> fxs $
+          (map #(% actions state) $)
+          (clj->js $)
+          (.mergeAll bacon $)
+          (.takeUntil $ bus))))
 
 (defn handle-fx
   [epic actions state dispatch]
@@ -32,9 +34,10 @@
 ;; ---------------------------------------------------------------------------
 
 (defn action?
-  [actions expected-type]
-  (-> actions
-      (.filter #(= (:type %) expected-type))))
+  [actions & expected-types]
+  (let [expected (set expected-types)]
+    (-> actions
+        (.filter #(expected (:type %))))))
 
 (defn create-store
   [initial reducer-map fx]
@@ -45,8 +48,8 @@
                   (.scan initial (combine-reducers reducer-map))
                   (.takeUntil bus)
                   (.doAction #(println "resulting state" %)))]
-    (.subscribe state identity)
     (handle-fx (combine-fx fx) actions state dispatch)
+    (.subscribe state identity)
     (dispatch {:type :initialize :data {}})
     {:dispatch dispatch
      :actions actions

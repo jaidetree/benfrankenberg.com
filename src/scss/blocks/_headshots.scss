@@ -1,3 +1,14 @@
+@keyframes pulse {
+  from {
+    opacity: 1.0;
+    transform: scale(1.0);
+  }
+  to {
+    opacity: 0;
+    transform: scale(3.0);
+  }
+}
+
 .headshots {
   position: absolute;
   top: 0;
@@ -43,6 +54,20 @@
 }
 .headshots__btn.next {
   right: 0;
+}
+.headshots__btn::before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  border-radius: 50%;
+  border: rems(1px) solid #F0B94D;
+  opacity: 0;
+  content: "";
+}
+.headshots__btn.active::before {
+  animation: pulse 500ms ease-out 0ms 1 forwards;
 }
 .headshots__item {
   position: absolute;
