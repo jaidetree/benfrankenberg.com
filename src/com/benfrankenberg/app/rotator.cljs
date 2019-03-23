@@ -97,12 +97,12 @@
       (.map (fn [[{button-selector :data} {:keys [selector]}]]
               (let [container (query selector)]
                 (query container button-selector))))
-      (.flatMapLatest (fn [el]
-                        (-> (stream/of el)
-                            (stream/delay-frame)
-                            (.doAction #(add-classes! % ["active"]))
-                            (.delay 500)
-                            (.doAction #(remove-classes! % ["active"])))))
+      (.flatMap (fn [el]
+                  (-> (stream/of el)
+                      (stream/delay-frame)
+                      (.doAction #(add-classes! % ["active"]))
+                      (.delay 500)
+                      (.doAction #(remove-classes! % ["active"])))))
       (.filter false)))
 
 (defn next-slide
