@@ -41,7 +41,8 @@
       [:img.headshot__img {:alt (str "Headshot #" idx " of Ben Frankenberg")
                            :src src}]
       [:a.btn.headshot__download
-        {:href src}
+        {:href src
+         :download true}
         [:i.inline.fas.fa-download]
         "Download"]]))
 
