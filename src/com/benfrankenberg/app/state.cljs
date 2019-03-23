@@ -1,4 +1,5 @@
-(ns com.benfrankenberg.app.state)
+(ns com.benfrankenberg.app.state
+  [:require [com.benfrankenberg.app.stream :as stream]])
 
 (defonce bacon (.-Bacon js/window))
 (defonce Bus (.-Bus bacon))
@@ -17,7 +18,7 @@
 (defn combine-fx
   [fxs]
   (fn [actions state]
-    (-> (.fromArray bacon (clj->js fxs))
+    (-> (stream/from fxs)
         (.flatMap #(% actions state))
         (.takeUntil bus))))
 

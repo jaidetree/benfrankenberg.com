@@ -13,11 +13,3 @@
    (query-all js/document selector))
   ([container selector]
    (js->clj (.from js/Array (.querySelectorAll container selector)))))
-
-(defn with-latest-from
-  [source secondary]
-  (.flatMap
-   source
-   (fn [x]
-     (-> (.once bacon x)
-         (.zip (.take secondary 1) vector)))))

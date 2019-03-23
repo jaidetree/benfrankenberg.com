@@ -1,31 +1,11 @@
 (ns com.benfrankenberg.app.rotator
   (:require
-   [clojure.string :refer [join split]]
-   [com.benfrankenberg.app.raf :refer [delay-frame next-frame]]
+   [com.benfrankenberg.app.dom :refer [swap-class! toggle-class!]]
    [com.benfrankenberg.app.state :refer [action? bus create-store gen-action]]
-   [com.benfrankenberg.app.util :refer [query query-all with-latest-from]]))
+   [com.benfrankenberg.app.stream :as stream]
+   [com.benfrankenberg.app.util :refer [query query-all]]))
 
 (def bacon (.-Bacon js/window))
-(def Bus (.-Bus bacon))
-
-(defn stream-of
-  [source]
-  (.once bacon source))
-
-(defn stream-from
-  [source]
-  (cond (sequential? source)       (stream-from (clj->js source))
-        (.isArray js/Array source) (.fromArray bacon source)
-        :else                      (stream-from [source])))
-
-"How should the rotator work?
-  - Call (rotator \".rotator\")
-  - Create a property stream to store state
-    - {:current 1
-       :status :transition
-       :from 1
-       :to 2}
-    - Initial index is .active"
 
 ;; Reducers
 ;; ---------------------------------------------------------------------------
@@ -58,48 +38,6 @@
   [idx total]
   (if (<= idx 0) total idx))
 
-(defn el->classes
-  [el]
-  (-> (.-className el)
-      (split #" ")
-      (set)))
-
-(defn toggle-class!
-  [el & class-names]
-  (let [classes (reduce (fn [classes class-name]
-                          (if (contains? classes class-name)
-                            (disj classes class-name)
-                            (conj classes class-name)))
-                        (el->classes el)
-                        class-names)]
-    (set! (.-className el) (join " " classes))
-    el))
-
-(defn remove-classes!
-  [el target-classes]
-  (set! (.-className el)
-        (->> el
-             (el->classes)
-             (remove (set target-classes))
-             (join " "))))
-
-(defn add-classes!
-  [el target-classes]
-  (set! (.-className el)
-        (->> el
-             (el->classes)
-             (into (set target-classes))
-             (join " "))))
-
-(defn swap-class!
-  [container el & class-names]
-  (let [target-classes (str "." (join "." class-names))]
-    (-> (query-all container target-classes)
-        (stream-from)
-        (.onValue #(remove-classes! % class-names)))
-    (add-classes! el class-names)
-    el))
-
 (defn prepare-transition
   [{:keys [from-el to-el direction-cls]}]
   (toggle-class! from-el "transition" "from" direction-cls)
@@ -120,12 +58,12 @@
   (let [container (query selector)
         from-el (query container (str ".slide[data-id=\"" from "\"]"))
         to-el   (query container (str ".slide[data-id=\"" to "\"]"))]
-    (-> (.once bacon state)
+    (-> (stream/of state)
         (.map #(merge % {:from-el from-el
                          :to-el to-el
                          :direction-cls (name direction)}))
         (.doAction prepare-transition)
-        (delay-frame)
+        (stream/delay-frame)
         (.doAction start-transition)
         (.delay 1200)
         (.doAction end-transition)
