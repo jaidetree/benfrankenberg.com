@@ -15,7 +15,7 @@
       (.map value)))
 
 (defn delay-frame
-  [source]
+  [^js source]
   (.sampledBy source (next-frame 1)))
 
 (defn from
@@ -29,7 +29,7 @@
   (.once bacon source))
 
 (defn with-latest-from
-  [source secondary]
+  [^js source ^js secondary]
   (.flatMap
    source
    (fn [x]

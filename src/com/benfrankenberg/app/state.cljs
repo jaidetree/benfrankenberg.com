@@ -25,8 +25,8 @@
           (.takeUntil $ bus))))
 
 (defn handle-fx
-  [epic actions state dispatch]
-  (-> (epic actions state)
+  [epic ^js actions ^js state dispatch]
+  (-> ^js (epic actions state)
       (.takeUntil bus)
       (.onValue dispatch)))
 
@@ -41,12 +41,12 @@
 
 (defn create-store
   [initial reducer-map fx]
-  (let [actions (Bus.)
+  (let [^js actions (Bus.)
         dispatch #(.push actions %)
         state (-> actions
                   (.doAction #(println "incoming action" %))
                   (.scan initial (combine-reducers reducer-map))
-                  (.takeUntil bus)
+                  (.takeUntil ^js bus)
                   (.doAction #(println "resulting state" %)))]
     (handle-fx (combine-fx fx) actions state dispatch)
     (.subscribe state identity)

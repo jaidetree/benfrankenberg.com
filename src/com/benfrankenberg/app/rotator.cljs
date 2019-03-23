@@ -5,7 +5,7 @@
    [com.benfrankenberg.app.stream :as stream]
    [com.benfrankenberg.app.util :refer [query query-all]]))
 
-(def bacon (.-Bacon js/window))
+(def ^js bacon (.-Bacon js/window))
 
 ;; Reducers
 ;; ---------------------------------------------------------------------------
@@ -74,23 +74,23 @@
 ;; ---------------------------------------------------------------------------
 
 (defn button-events
-  [actions state]
+  [^js actions ^js state]
   (println "ui.event.buttons: init!")
   (-> actions
       (action? :start)
       (.map #(get-in % [:data :selector]))
       (.map #(query %))
-      (.flatMap
-       (fn [container]
-         (-> [(query container ".prev")
-              (query container ".next")]
-             (stream/from)
-             (.flatMap #(.fromEvent bacon % "click"))
-             (.map #(-> % (.-currentTarget) (.-value)))
-             (.map #(gen-action (keyword %) (str "." %))))))))
+      ^js (.flatMap
+           (fn [container]
+             (-> [(query container ".prev")
+                  (query container ".next")]
+                 (stream/from)
+                 (.flatMap #(.fromEvent bacon % "click"))
+                 (.map #(-> % (.-currentTarget) (.-value)))
+                 (.map #(gen-action (keyword %) (str "." %))))))))
 
 (defn button-fx
-  [actions state]
+  [^js actions ^js state]
   (-> actions
       (action? :prev :next)
       (stream/with-latest-from state)
@@ -106,10 +106,10 @@
       (.filter false)))
 
 (defn next-slide
-  [actions state]
+  [^js actions ^js state]
   (-> actions
       (action? :next)
-      (.flatMapLatest #(.take state 1))
+      ^js (.flatMapLatest #(.take state 1))
       (.map (fn [{:keys [total current] :as db}]
               (let [idx (next-idx (inc current) total)]
                 (merge  {:type :rotate
@@ -119,10 +119,10 @@
                                          :direction "forwards")}))))))
 
 (defn prev-slide
-  [actions state]
+  [^js actions ^js state]
   (-> actions
       (action? :prev)
-      (.flatMapLatest #(.take state 1))
+      ^js (.flatMapLatest #(.take state 1))
       (.map (fn [{:keys [current total] :as db}]
               (let [idx (prev-idx (dec current) total)]
                 (merge  {:type :rotate
@@ -132,11 +132,11 @@
                                          :direction "backwards")}))))))
 
 (defn rotate
-  [actions state]
+  [^js actions ^js state]
   (-> actions
       (action? :rotate)
       (.map #(get % :data))
-      (.flatMapConcat rotate-slide-elements)
+      ^js (.flatMapConcat rotate-slide-elements)
       (.map (gen-action :rotated))))
 
 (def fx

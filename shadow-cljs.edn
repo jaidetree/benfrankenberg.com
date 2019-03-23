@@ -7,4 +7,5 @@
                 :devtools {:after-load com.benfrankenberg.app.core/reload!}
                 :modules {:app {:entries [com.benfrankenberg.app.core]
                                 :init-fn com.benfrankenberg.app.core/init!}}
-                :release {:compiler-options {:optimizations :advanced}}}}}
+                :release {:compiler-options {:optimizations :advanced
+                                             :infer-externs :auto}}}}}
