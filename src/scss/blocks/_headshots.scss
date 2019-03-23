@@ -56,9 +56,15 @@
 .headshots__item.active {
   z-index: 100;
 }
+.headshots__item.active .headshot__download {
+  transform: translateY(0);
+}
 
 .headshots__item.transition {
   z-index: 100;
+}
+.headshots__item.transition .headshot__download {
+  transform: translateY(200%);
 }
 .headshots__item.rotate {
   transition: all 1200ms ease;

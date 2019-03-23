@@ -27,6 +27,15 @@ h1, h2 {
   margin-bottom: rems(32px);
 }
 
+.headshot__download {
+  width: 90%;
+  margin: auto;
+}
+
+.headshots {
+  height: 100vh;
+}
+
 .hero {
   height: 100vh;
   max-height: rems(720px);

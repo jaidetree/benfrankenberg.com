@@ -27,6 +27,12 @@
   }
 }
 
+@mixin mobile {
+  @include media($max-width: 929) {
+    @content;
+  }
+}
+
 // Typography
 // ---------------------------------------------------------------------------
 %body-font {
