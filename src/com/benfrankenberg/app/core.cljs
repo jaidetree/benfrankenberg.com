@@ -1,5 +1,6 @@
 (ns com.benfrankenberg.app.core
   (:require
+    [com.benfrankenberg.app.animation :refer [go!]]
     [com.benfrankenberg.app.rotator :refer [rotator]]
     [com.benfrankenberg.app.scroll :refer [scroll-hero-opacity]]
     [com.benfrankenberg.app.state :refer [bus]]
@@ -11,7 +12,8 @@
 (defn init!
   []
   (scroll-hero-opacity)
-  (rotator ".headshots"))
+  (rotator ".headshots")
+  (go!))
 
 (defn reload!
   []
