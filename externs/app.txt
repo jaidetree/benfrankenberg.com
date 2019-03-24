@@ -9,6 +9,8 @@ flatMapFirst
 flatMapLatest
 fromArray
 fromBinder
+fromEvent
+last
 map
 once
 onValue
