@@ -9,6 +9,11 @@ h1, h2 {
 
 // Blocks
 // ---------------------------------------------------------------------------
+
+.about__headshot {
+  padding: 0;
+}
+
 .background {
   height: 100vh;
   max-height: rems(720px);
