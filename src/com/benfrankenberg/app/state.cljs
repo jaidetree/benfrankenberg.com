@@ -1,8 +1,7 @@
 (ns com.benfrankenberg.app.state
-  [:require [com.benfrankenberg.app.stream :as stream]])
-
-(defonce bacon (.-Bacon js/window))
-(defonce Bus (.-Bus bacon))
+  [:require
+   [bacon :as bacon :refer [Bus]]
+   [com.benfrankenberg.app.stream :as stream]])
 
 ;; Shared event handler
 (defonce bus (Bus.))
@@ -25,8 +24,8 @@
           (.takeUntil $ bus))))
 
 (defn handle-fx
-  [epic ^js actions ^js state dispatch]
-  (-> ^js (epic actions state)
+  [epic actions state dispatch]
+  (-> (epic actions state)
       (.takeUntil bus)
       (.onValue dispatch)))
 
@@ -41,12 +40,12 @@
 
 (defn create-store
   [initial reducer-map fx]
-  (let [^js actions (Bus.)
+  (let [actions (Bus.)
         dispatch #(.push actions %)
         state (-> actions
                   (.doAction #(println "incoming action" %))
                   (.scan initial (combine-reducers reducer-map))
-                  (.takeUntil ^js bus)
+                  (.takeUntil bus)
                   (.doAction #(println "resulting state" %)))]
     (handle-fx (combine-fx fx) actions state dispatch)
     (.subscribe state identity)

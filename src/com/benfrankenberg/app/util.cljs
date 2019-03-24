@@ -1,6 +1,5 @@
-(ns com.benfrankenberg.app.util)
-
-(def bacon (.-Bacon js/window))
+(ns com.benfrankenberg.app.util
+  (:require [bacon :as bacon]))
 
 (defn query
   ([selector]

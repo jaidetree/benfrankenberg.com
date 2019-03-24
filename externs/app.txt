@@ -1,0 +1,21 @@
+# Bacon.js - Methods shouldn't change but may need to add more
+global:Bacon
+delay
+doAction
+doError
+flatMap
+flatMapConcat
+flatMapFirst
+flatMapLatest
+fromArray
+fromBinder
+map
+once
+onValue
+onEnd
+onError
+sampledBy
+subscribe
+take
+takeUntil
+zip

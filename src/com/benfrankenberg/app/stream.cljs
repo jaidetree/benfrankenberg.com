@@ -1,7 +1,7 @@
 (ns com.benfrankenberg.app.stream
-  (:require [com.benfrankenberg.app.raf :refer [kill-raf raf End]]))
-
-(def bacon (.-Bacon js/window))
+  (:require
+   [bacon :as bacon :refer [End]]
+   [com.benfrankenberg.app.raf :refer [kill-raf raf]]))
 
 (defn next-frame
   [value]
@@ -15,7 +15,7 @@
       (.map value)))
 
 (defn delay-frame
-  [^js source]
+  [source]
   (.sampledBy source (next-frame 1)))
 
 (defn from
@@ -29,7 +29,7 @@
   (.once bacon source))
 
 (defn with-latest-from
-  [^js source ^js secondary]
+  [source secondary]
   (.flatMap
    source
    (fn [x]

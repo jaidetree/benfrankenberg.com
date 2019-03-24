@@ -1,8 +1,6 @@
 (ns com.benfrankenberg.app.raf
-  (:require [goog.object :as obj]))
-
-(def bacon (.-Bacon js/window))
-(def End (.-End bacon))
+  (:require
+   [goog.object :as obj]))
 
 (defn any
   [choices]

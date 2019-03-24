@@ -1,11 +1,10 @@
 (ns com.benfrankenberg.app.scroll
   (:require
     [goog.object :as obj]
+    [bacon :as bacon]
     [com.benfrankenberg.app.state :refer [bus]]
     [com.benfrankenberg.app.stream :refer [next-frame]]
     [com.benfrankenberg.app.util :refer [query query-all]]))
-
-(def bacon (.-Bacon js/window))
 
 (defn pick
   [o keys]
