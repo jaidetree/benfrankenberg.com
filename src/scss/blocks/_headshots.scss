@@ -44,7 +44,7 @@
   text-align: center;
   outline: none;
   opacity: 0.5;
-  transition: all 250ms ease-in-out;
+  transition: background 250ms ease-in-out, opacity 250ms ease;
 }
 .headshots__btn:hover {
   opacity: 1;
@@ -55,6 +55,9 @@
 }
 .headshots__btn.next {
   right: 0;
+}
+.headshots__btn.active {
+  opacity: 1;
 }
 .headshots__btn::before {
   position: absolute;
@@ -76,7 +79,8 @@
   top: 0;
   bottom: 0;
   right: 0;
-  z-index: 0
+  z-index: 0;
+  overflow: hidden;
 }
 
 .headshots__item.active {

@@ -6,6 +6,9 @@
   overflow: hidden;
 }
 .headshot__download {
+  position: absolute;
+  right: rems(32px);
+  bottom: rems(32px);
   transform: translateY(200%);
   transition: all 250ms ease;
 }

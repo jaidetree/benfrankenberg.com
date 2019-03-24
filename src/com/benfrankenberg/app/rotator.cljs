@@ -74,7 +74,6 @@
 
 (defn button-events
   [actions state]
-  (println "ui.event.buttons: init!")
   (-> actions
       (action? :start)
       (.map #(get-in % [:data :selector]))
@@ -138,12 +137,88 @@
       (.flatMapConcat rotate-slide-elements)
       (.map (gen-action :rotated))))
 
+(defn log
+  [& args]
+  (apply (.-log js/console) args))
+
+(defn normalize-touch
+  [event]
+  (as-> event $
+        (.-changedTouches $)
+        (.from js/Array $)
+        (nth $ 0)
+        (hash-map :x (.-pageX $)
+                  :y (.-pageY $))))
+
+(defn analyze
+  [[start end]]
+  (let [el (.-currentTarget end)
+        width (.-clientWidth el)
+        {start-y :y start-x :x} (normalize-touch start)
+        {end-y   :y end-x   :x} (normalize-touch end)
+        h (- end-x start-x)
+        v (- end-y start-y)
+        direction (if (> h 0) :prev :next)]
+    {:events [start end]
+     :el el
+     :h (.abs js/Math h)
+     :v (.abs js/Math v)
+     :r (.abs js/Math (/ h v))
+     :scale (max (min (/ (.abs js/Math h) (- width 50)) 1) 0)
+     :direction direction
+     :selector (str "." (name direction))}))
+
+(defn swipe?
+  [{:keys [v h r]}]
+  (and (< v 20)
+       (>= r 20)
+       (> h 100)))
+
+(defn scale-btn
+  [{:keys [direction el scale selector]}]
+  (let [btn (query el selector)]
+    (set! (-> btn (.-style) (.-transform))
+          (str "scale(" (min (+ scale 1) 1.5) ")"))))
+
+(defn reset-btn-scale
+  [_]
+  (doseq [selector [".prev" ".next"]]
+    (set! (-> (query selector) (.-style) (.-transform))
+          "scale(1)")))
+
+(defn swipe
+  [actions state]
+  (-> actions
+      (action? :start)
+      (.map #(-> %
+                 (get-in [:data :selector])
+                 (query)))
+      (.flatMap #(.fromEvent bacon % "touchstart"))
+      (.flatMapFirst
+       (fn [start]
+         (let [el (.-currentTarget start)]
+           (-> (.fromEvent bacon el "touchmove")
+               (.map #(analyze [start %]))
+               (.skipWhile #(not (swipe? %)))
+               (.doAction #(doseq [event (:events %)]
+                             (.preventDefault event)))
+               (.doAction scale-btn)
+               (.takeUntil (-> (.fromEvent bacon el "touchend")
+                               (.take 1)
+                               (.doAction ".preventDefault")
+                               (.doAction reset-btn-scale)))
+               (.last)))))
+      (.filter swipe?)
+      (.map (fn [{:keys [direction selector]}]
+              (gen-action direction selector)))))
+
 (def fx
   [button-events
    button-fx
    next-slide
    prev-slide
-   rotate])
+   rotate
+   swipe])
 
 ;; Public API
 ;; ---------------------------------------------------------------------------

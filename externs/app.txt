@@ -15,6 +15,7 @@ onValue
 onEnd
 onError
 sampledBy
+skipWhile
 subscribe
 take
 takeUntil
