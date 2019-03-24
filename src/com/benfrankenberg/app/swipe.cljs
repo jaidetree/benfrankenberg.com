@@ -27,23 +27,35 @@
      :el el
      :h (.abs js/Math h)
      :v (.abs js/Math v)
-     :r (.abs js/Math (/ h v))
+     :ratio (.abs js/Math (/ h v))
      :scale (max (min (/ (.abs js/Math h) 100) 1) 0)
      :direction direction
      :selector (str "." (name direction))}))
 
+(defn swiping?
+  [{:keys [v h]}]
+  (and (> h v)
+       (> h 0)))
+
 (defn swipe?
-  ([gesture]
-   (swipe? gesture :threshold 50))
-  ([{:keys [v h r]} & {:keys [threshold]}]
-   (and (< v 20)
-        (>= r 20)
-        (> h threshold))))
+  ([{:keys [v h ratio]}]
+   (and (> h v)
+        (< v 50)
+        (> h 100))))
 
 (defn cancel-events
   [gesture]
   (doseq [event (:events gesture)]
-    (.preventDefault event)))
+    (.preventDefault event)
+    (.stopPropagation event)))
+
+(defn prevent-scroll
+  []
+  (-> (.fromEvent bacon js/window
+                  (fn [binder listener]
+                    (binder "touchmove" listener #js {:passive false})))
+      (.doAction #(.preventDefault %))
+      (.filter false)))
 
 (defn touch-end
   [{:keys [el on-end] :as opts}]
@@ -57,13 +69,15 @@
   [{:keys [el on-move]} start]
   (-> (.fromEvent bacon el "touchmove")
       (.map #(events->gesture [start %]))
-      (.skipWhile #(not (swipe? % :threshold 20)))
+      (.skipWhile #(not (swiping? %)))
+      (.merge (prevent-scroll))
       (.doAction cancel-events)
       (do-when on-move)))
 
 (defn touch-start
   [{:keys [el on-start]}]
   (-> (.fromEvent bacon el "touchstart")
+      (.doAction "preventDefault")
       (do-when on-start)))
 
 (defn swipe

@@ -90,7 +90,7 @@
         (.doAction prepare-transition)
         (stream/delay-frame)
         (.doAction start-transition)
-        (.delay 1200)
+        (.delay 800)
         (.doAction end-transition)
         (.doAction #(dom/swap-class! container to-el "active"))
         (.map (constantly to)))))

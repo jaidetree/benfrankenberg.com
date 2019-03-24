@@ -23,7 +23,5 @@
 
 (defn go!
   []
-  (-> (.later bacon 1000 0)
-      (.flatMap #(transition 5000 ease))
-      (.doAction fade-in)
-      (.onValue #(.log js/console "ui.anim:" %))))
+  (-> (transition 1000 ease)
+      (.onValue fade-in)))
