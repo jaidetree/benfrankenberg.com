@@ -28,15 +28,17 @@
      :h (.abs js/Math h)
      :v (.abs js/Math v)
      :r (.abs js/Math (/ h v))
-     :scale (max (min (/ (.abs js/Math h) (- width 50)) 1) 0)
+     :scale (max (min (/ (.abs js/Math h) 100) 1) 0)
      :direction direction
      :selector (str "." (name direction))}))
 
 (defn swipe?
-  [{:keys [v h r]}]
-  (and (< v 20)
-       (>= r 20)
-       (> h 100)))
+  ([gesture]
+   (swipe? gesture :threshold 50))
+  ([{:keys [v h r]} & {:keys [threshold]}]
+   (and (< v 20)
+        (>= r 20)
+        (> h threshold))))
 
 (defn cancel-events
   [gesture]
@@ -55,7 +57,7 @@
   [{:keys [el on-move]} start]
   (-> (.fromEvent bacon el "touchmove")
       (.map #(events->gesture [start %]))
-      (.skipWhile #(not (swipe? %)))
+      (.skipWhile #(not (swipe? % :threshold 20)))
       (.doAction cancel-events)
       (do-when on-move)))
 

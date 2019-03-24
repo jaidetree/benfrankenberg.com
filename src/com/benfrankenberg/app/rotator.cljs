@@ -36,17 +36,24 @@
 
 (defn scale-btn
   [{:keys [direction el scale selector]}]
-  (let [btn (query el selector)]
-    (set! (-> btn (.-style) (.-transform))
-          (str "scale(" (min (+ scale 1) 1.5) ")"))))
+  (let [btn (query el selector)
+        style (.-style btn)
+        size (+ 1 (* scale 0.5))
+        opacity (+ 0.5 (* scale 0.5))]
+    (set! (.-transform style)
+          (str "scale(" size ")"))
+    (set! (.-opacity style)
+          opacity)))
 
 (defn reset-btn-scale
   [{:keys [el]}]
   (doseq [selector [".prev" ".next"]]
-    (set! (-> (query el selector)
-              (.-style)
-              (.-transform))
-          "scale(1)")))
+    (let [btn (query el selector)
+          style (.-style btn)]
+      (set! (.-transform style)
+            "scale(1)")
+      (set! (.-opacity style)
+            ""))))
 
 (defn next-idx
   [idx total]
