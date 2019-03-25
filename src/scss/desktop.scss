@@ -37,6 +37,21 @@
   width: rems(170px);
   border-radius: rems(3px);
 }
+.headshots__item {
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+
+.headshots {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+}
 
 .hero {
   height: 100vh;

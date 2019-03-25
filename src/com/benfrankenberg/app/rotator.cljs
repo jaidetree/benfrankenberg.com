@@ -95,11 +95,27 @@
         (.doAction #(dom/swap-class! container to-el "active"))
         (.map (constantly to)))))
 
+(defn screen-width
+  []
+  (-> js/window
+      (.-innerWidth)
+      (doto println)))
+
+
+(defn mobile?
+  []
+  (<= (screen-width) 929))
+
+(defn desktop?
+  []
+  (> (screen-width) 929))
+
 (defn set-container-height
   [container]
-  (let [el (query container ".slide")]
-    (set! (-> container (.-style) (.-height))
-          (str (.-clientHeight el) "px"))))
+  (when (mobile?)
+    (let [el (query container ".slide img")]
+      (set! (-> container (.-style) (.-height))
+            (str (.-clientHeight el) "px")))))
 
 ;; Effects
 ;; ---------------------------------------------------------------------------
