@@ -5,12 +5,6 @@
   [source f]
   (if f (.doAction source f) source))
 
-(defn cancel-events
-  [gesture]
-  (doseq [event (:events gesture)]
-    (.preventDefault event)
-    (.stopPropagation event)))
-
 (defn bind-event
   [event-name]
   (fn [binder listener]
@@ -44,7 +38,7 @@
 
 (defn swiping?
   [{:keys [v h]}]
-  (> h 0))
+  (> h 10))
 
 (defn swipe?
   ([{:keys [v h ratio]}]
@@ -53,22 +47,19 @@
         (>= h 100))))
 
 (defn touch-end
-  [{:keys [el on-end] :as opts}]
-  (-> (.fromEvent bacon js/window (bind-event "touchend"))
+  [{:keys [block-scroll? el on-end] :as opts}]
+  (-> (.fromEvent bacon el (bind-event "touchend"))
       (.take 1)
+      (.doAction #(reset! block-scroll? false))
       (.map opts)
       (do-when on-end)))
 
 (defn touch-move
-  [{:keys [el on-move]} start]
-  (-> (.fromEvent bacon js/window (bind-event "touchmove"))
-      (.doAction #(.preventDefault %))
-      (.doAction #(.stopPropagation %))
+  [{:keys [block-scroll? el on-move]} start]
+  (-> (.fromEvent bacon el (bind-event "touchmove"))
       (.map #(events->gesture el [start %]))
-      (.doAction #(println "move " (select-keys % [:h :v :ratio])))
       (.skipWhile #(not (swiping? %)))
-      (.doAction #(println "swipe detected"))
-      (.doAction cancel-events)
+      (.doAction #(reset! block-scroll? true))
       (do-when on-move)))
 
 (defn touch-start
@@ -76,10 +67,20 @@
   (-> (.fromEvent bacon el (bind-event "touchstart"))
       (do-when on-start)))
 
+(defn global-touch-handler
+  [{:keys [block-scroll?]}]
+  (-> (.fromEvent bacon js/window (bind-event "touchmove"))
+      (.filter #(= @block-scroll? true))
+      (.doAction #(.preventDefault %))
+      (.filter false)))
+
 (defn swipe
   [{:keys [el on-start on-move on-end] :as opts}]
-  (-> (touch-start opts)
-      (.flatMapFirst #(-> (touch-move opts %)
-                          (.takeUntil (touch-end opts))
-                          (.last)))
-      (.filter swipe?)))
+  (let [block-scroll? (atom false)
+        opts (assoc opts :block-scroll? block-scroll?)]
+    (-> (touch-start opts)
+        (.merge (global-touch-handler opts))
+        (.flatMapLatest #(-> (touch-move opts %)
+                             (.takeUntil (touch-end opts))
+                             (.last)))
+        (.filter swipe?))))
