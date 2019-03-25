@@ -88,6 +88,18 @@
                 :content "#da532c"}]
         [:meta {:name "theme-color"
                 :content "#ffffff"}]
+        [:meta {:name "og:image:width"
+                :content "279"}]
+        [:meta {:name "og:image:height"
+                :content "279"}]
+        [:meta {:name "og:description"
+                :content "Actor &bull; Artist &bull; Swordsman"}]
+        [:meta {:name "og:title"
+                :content "Ben Frankenberg"}]
+        [:meta {:name "og:url"
+                :content "https://benfrankenberg.com"}]
+        [:meta {:name "og:image"
+                :content "https://benfrankenberg.com/og-image.jpg"}]
         [:link {:rel "apple-touch-icon"
                 :sizes "180x180"
                 :href "/apple-touch-icon.png"}]
