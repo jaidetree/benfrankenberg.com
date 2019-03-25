@@ -95,6 +95,12 @@
         (.doAction #(dom/swap-class! container to-el "active"))
         (.map (constantly to)))))
 
+(defn set-container-height
+  [container]
+  (let [el (query container ".slide")]
+    (set! (-> container (.-style) (.-height))
+          (str (.-clientHeight el) "px"))))
+
 ;; Effects
 ;; ---------------------------------------------------------------------------
 
@@ -190,6 +196,7 @@
         index (or (query-initial-index slides) 1)
         store (create-store {:current index} reducers fx)
         {:keys [dispatch state]} store]
+    (set-container-height container)
     (dispatch {:type :start
                :data {:total (count slides)
                       :selector selector

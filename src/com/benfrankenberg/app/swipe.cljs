@@ -5,6 +5,17 @@
   [source f]
   (if f (.doAction source f) source))
 
+(defn cancel-events
+  [gesture]
+  (doseq [event (:events gesture)]
+    (.preventDefault event)
+    (.stopPropagation event)))
+
+(defn bind-window-touch-move
+  [binder listener]
+  (binder "touchmove" listener #js {:passive false
+                                    :capture true}))
+
 (defn normalize-touch
   [event]
   (as-> event $
@@ -15,9 +26,8 @@
                   :y (.-pageY $))))
 
 (defn events->gesture
-  [[start end]]
-  (let [el (.-currentTarget end)
-        width (.-clientWidth el)
+  [el [start end]]
+  (let [width (.-clientWidth el)
         {start-y :y start-x :x} (normalize-touch start)
         {end-y   :y end-x   :x} (normalize-touch end)
         h (- end-x start-x)
@@ -27,57 +37,43 @@
      :el el
      :h (.abs js/Math h)
      :v (.abs js/Math v)
-     :ratio (.abs js/Math (/ h v))
+     :ratio (.abs js/Math (/ v h))
      :scale (max (min (/ (.abs js/Math h) 100) 1) 0)
      :direction direction
      :selector (str "." (name direction))}))
 
 (defn swiping?
   [{:keys [v h]}]
-  (and (> h v)
-       (> h 0)))
+  (> h 50))
 
 (defn swipe?
   ([{:keys [v h ratio]}]
    (and (> h v)
-        (< v 50)
-        (> h 100))))
-
-(defn cancel-events
-  [gesture]
-  (doseq [event (:events gesture)]
-    (.preventDefault event)
-    (.stopPropagation event)))
-
-(defn prevent-scroll
-  []
-  (-> (.fromEvent bacon js/window
-                  (fn [binder listener]
-                    (binder "touchmove" listener #js {:passive false})))
-      (.doAction #(.preventDefault %))
-      (.filter false)))
+        (< ratio 1)
+        (>= h 100))))
 
 (defn touch-end
   [{:keys [el on-end] :as opts}]
-  (-> (.fromEvent bacon el "touchend")
+  (-> (.fromEvent bacon js/window "touchend")
       (.take 1)
-      (.doAction ".preventDefault")
       (.map opts)
       (do-when on-end)))
 
 (defn touch-move
   [{:keys [el on-move]} start]
-  (-> (.fromEvent bacon el "touchmove")
-      (.map #(events->gesture [start %]))
+  (-> (.fromEvent bacon js/window "touchmove")
+      (.doAction #(.preventDefault %))
+      (.doAction #(.stopPropagation %))
+      (.map #(events->gesture el [start %]))
+      (.doAction #(println "move " (select-keys % [:h :v :ratio])))
       (.skipWhile #(not (swiping? %)))
-      (.merge (prevent-scroll))
+      (.doAction #(println "swipe detected"))
       (.doAction cancel-events)
       (do-when on-move)))
 
 (defn touch-start
   [{:keys [el on-start]}]
   (-> (.fromEvent bacon el "touchstart")
-      (.doAction "preventDefault")
       (do-when on-start)))
 
 (defn swipe

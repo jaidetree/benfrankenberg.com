@@ -10,13 +10,6 @@
 }
 
 .headshots {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  overflow: hidden;
-  white-space: nowrap;
 }
 .headshots__ui {
   position: absolute;
@@ -73,14 +66,9 @@
 .headshots__btn.active::before {
   animation: pulse 500ms ease-out 0ms 1 forwards;
 }
+
 .headshots__item {
   position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  right: 0;
-  z-index: 0;
-  overflow: hidden;
 }
 
 .headshots__item.active {

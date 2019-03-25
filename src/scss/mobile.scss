@@ -33,12 +33,20 @@ h1, h2 {
 }
 
 .headshot__download {
+  left: 0;
+  right: 0;
   width: 90%;
   margin: auto;
 }
 
 .headshots {
-  height: 100vh;
+  position: relative;
+  height: rems(566px);
+  overflow: hidden;
+}
+
+.headshots__item {
+  flex: 0 0 100%;
 }
 
 .hero {
