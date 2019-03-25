@@ -101,6 +101,9 @@
                 :media "screen and (min-width: 930px)"
                 :href "/css/desktop.css"}]]
       [:body
+        [:script
+         {:type "text/javascript"}
+         "window.document.body.style.opacity = 0;"]
         [:div.page
           (list (background)
                 (hero)
