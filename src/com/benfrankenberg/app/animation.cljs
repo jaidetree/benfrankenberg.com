@@ -13,8 +13,8 @@
   (-> (.interval bacon (/ duration 100) 0)
       (.scan 0 inc)
       (.takeWhile #(<= % 100))
-      (.map #(/ % 100))))
-      ; (.map ease-fn)))
+      (.map #(/ % 100))
+      (.map ease-fn)))
 
 (defn fade-in
   [opacity]
@@ -28,6 +28,6 @@
                     (reset! time-started (.now js/Date))
                     (println "Starting transition")))
       (.flatMap #(transition 1000 ease))
-      ; (.doAction fade-in)
+      (.doAction fade-in)
       (.doEnd #(println "Transition elapsed time: " (- (.now js/Date) @time-started)))
       (.onEnd identity)))
