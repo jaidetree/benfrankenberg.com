@@ -5,7 +5,8 @@
    [com.benfrankenberg.app.state :refer [action? bus create-store gen-action]]
    [com.benfrankenberg.app.stream :as stream]
    [com.benfrankenberg.app.swipe :refer [swipe]]
-   [com.benfrankenberg.app.util :refer [query query-all]]))
+   [com.benfrankenberg.app.util :refer [query query-all]]
+   [com.benfrankenberg.app.viewport :as viewport]))
 
 ;; Reducers
 ;; ---------------------------------------------------------------------------
@@ -95,27 +96,14 @@
         (.doAction #(dom/swap-class! container to-el "active"))
         (.map (constantly to)))))
 
-(defn screen-width
-  []
-  (-> js/window
-      (.-innerWidth)
-      (doto println)))
-
-
-(defn mobile?
-  []
-  (<= (screen-width) 929))
-
-(defn desktop?
-  []
-  (> (screen-width) 929))
-
 (defn set-container-height
   [container]
-  (when (mobile?)
-    (let [el (query container ".slide img")]
-      (set! (-> container (.-style) (.-height))
-            (str (.-clientHeight el) "px")))))
+  (let [el (query container ".slide img")]
+    (-> (.fromEvent bacon el "load")
+        (.filter #(viewport/mobile?))
+        (.onValue (fn [_]
+                    (set! (-> container (.-style) (.-height))
+                          (str (.-clientHeight el) "px")))))))
 
 ;; Effects
 ;; ---------------------------------------------------------------------------

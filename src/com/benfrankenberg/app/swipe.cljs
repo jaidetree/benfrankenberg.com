@@ -11,10 +11,10 @@
     (.preventDefault event)
     (.stopPropagation event)))
 
-(defn bind-window-touch-move
-  [binder listener]
-  (binder "touchmove" listener #js {:passive false
-                                    :capture true}))
+(defn bind-event
+  [event-name]
+  (fn [binder listener]
+    (binder event-name listener #js {:passive false})))
 
 (defn normalize-touch
   [event]
@@ -44,7 +44,7 @@
 
 (defn swiping?
   [{:keys [v h]}]
-  (> h 50))
+  (> h 0))
 
 (defn swipe?
   ([{:keys [v h ratio]}]
@@ -54,14 +54,14 @@
 
 (defn touch-end
   [{:keys [el on-end] :as opts}]
-  (-> (.fromEvent bacon js/window "touchend")
+  (-> (.fromEvent bacon js/window (bind-event "touchend"))
       (.take 1)
       (.map opts)
       (do-when on-end)))
 
 (defn touch-move
   [{:keys [el on-move]} start]
-  (-> (.fromEvent bacon js/window "touchmove")
+  (-> (.fromEvent bacon js/window (bind-event "touchmove"))
       (.doAction #(.preventDefault %))
       (.doAction #(.stopPropagation %))
       (.map #(events->gesture el [start %]))
@@ -73,7 +73,7 @@
 
 (defn touch-start
   [{:keys [el on-start]}]
-  (-> (.fromEvent bacon el "touchstart")
+  (-> (.fromEvent bacon el (bind-event "touchstart"))
       (do-when on-start)))
 
 (defn swipe
