@@ -9,7 +9,12 @@
   [:header.hero
     [:div.hero__inner
       [:h1.hero__title.display "Benjamin Frankenberg"]
-      [:h2.hero__subtitle.body "Actor &bull; Artist &bull; Swordsman"]]])
+      [:h2.hero__subtitle.body "Actor &bull; Artist &bull; Swordsman"]]
+    [:div.scroll-hint
+     ; [:span.scroll-hint__text "Scroll down to discover more about Ben"]]])
+     [:span.scroll-hint__text "Scroll down"]
+     [:i.scroll-hint__icon.fas.fa-chevron-down]
+     [:span.scroll-hint__text "Discover more"]]])
 
 (defn bio
   []
