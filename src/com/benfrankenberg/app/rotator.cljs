@@ -106,6 +106,14 @@
                     (set! (-> container (.-style) (.-height))
                           (str (.-clientHeight el) "px")))))))
 
+(defn update-progress-bar
+  [{:keys [direction selector current total] :as state}]
+  (let [container (query selector)
+        el (query container ".headshots__progress")
+        progress (.toFixed (* (/ current total) 100) 4)]
+    (set! (-> el (.-style) (.-width))
+          (str progress "%"))))
+
 ;; Effects
 ;; ---------------------------------------------------------------------------
 
@@ -167,6 +175,14 @@
                                     :to idx
                                     :direction "backwards")}))))))
 
+(defn progress-bar-fx
+  [actions state]
+  (-> actions
+      (action? :start :rotate)
+      (.map #(get % :data))
+      (.doAction update-progress-bar)
+      (.filter false)))
+
 (defn rotate
   [actions state]
   (-> actions
@@ -208,6 +224,7 @@
    button-fx
    next-slide
    prev-slide
+   progress-bar-fx
    rotate
    swipe-events
    swipe-hint])

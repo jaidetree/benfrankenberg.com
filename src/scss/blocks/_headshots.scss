@@ -9,8 +9,6 @@
   }
 }
 
-.headshots {
-}
 .headshots__ui {
   position: absolute;
   top: 0;
@@ -20,6 +18,22 @@
   height: rems(48px);
   margin: auto rems(32px);
   z-index: 200;
+}
+.headshots__progress-bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: rems(5px);
+  background: black(50%);
+  z-index: 200;
+}
+.headshots__progress {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  background: #efb857;
+  transition: width 800ms ease;
 }
 .headshots__btn {
   position: absolute;

@@ -60,6 +60,8 @@
         {:data-id idx
          :class (when (= idx 1) "active")}
         [headshot idx]])]
+    [:div.headshots__progress-bar
+     [:div.headshots__progress]]
     [:div.headshots__ui
       [:button.headshots__btn.prev
         {:value "prev"}
