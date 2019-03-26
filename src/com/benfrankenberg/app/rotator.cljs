@@ -197,16 +197,19 @@
       (action? :start)
       (.map query-container)
       (.flatMap #(swipe {:el % :on-move scale-btn :on-end reset-btn-scale}))
-      (.map #(gen-action (:direction %) (:selector %)))))
+      (.map #(select-keys % [:direction :selector]))
+      (.map (gen-action :swipe))))
 
 (defn swipe-hint
   [actions state]
   (-> actions
-    (.takeWhile #(viewport/mobile?))
+    (.takeWhile #(or (viewport/mobile?)))
     (action? :rotate)
     (.flatMap (constantly state))
     (.take 1)
     (.map #(query (:selector %)))
+    (.takeUntil (-> actions
+                    (action? :swipe)))
     (.doAction (fn [container]
                  (let [el (query container ".swipe-hint")]
                    (dom/add-classes! el ["active"]))))
@@ -219,6 +222,13 @@
                    (dom/remove-classes! el ["active"]))))
     (.filter false)))
 
+(defn swipe-rotate
+  [actions state]
+  (-> actions
+      (action? :swipe)
+      (.map #(:data %))
+      (.map #(gen-action (:direction %) (:selector %)))))
+
 (def fx
   [button-events
    button-fx
@@ -227,7 +237,8 @@
    progress-bar-fx
    rotate
    swipe-events
-   swipe-hint])
+   swipe-hint
+   swipe-rotate])
 
 ;; Public API
 ;; ---------------------------------------------------------------------------
