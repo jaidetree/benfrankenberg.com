@@ -47,14 +47,15 @@
 
 (defn post-css
   [{:keys [plugins]}]
-  (fn [file]
-    (-> (postcss (clj->js plugins))
-        (.process (.-contents file) #js {:from (.-relative file)
-                                         :to (.-relative file)})
-        (stream)
-        (.map (fn [result]
-                (let [css (.-css result)]
-                  (.clone file #js {:contents (.from Buffer css)})))))))
+  (let [postcss (postcss (clj->js plugins))]
+    (fn [file]
+      (-> postcss
+          (.process (.-contents file) #js {:from (.-relative file)
+                                           :to (.-relative file)})
+          (stream)
+          (.map (fn [result]
+                  (let [css (.-css result)]
+                    (.clone file #js {:contents (.from Buffer css)}))))))))
 
 (defn scss
   [options]
@@ -66,7 +67,7 @@
         (render-css)
         (.map #(create-css-file file %))
         (.map #(rename % rename-scss-file))
-        (.flatMap (post-css [autoprefixer cssnano]))
+        (.flatMap (post-css {:plugins [autoprefixer cssnano]}))
         (.tap #(log-css-file (.-relative %))))))
 
 (defn scss->css
