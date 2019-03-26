@@ -100,6 +100,7 @@
   [container]
   (let [el (query container ".slide img")]
     (-> (.fromEvent bacon el "load")
+        (.startWith true)
         (.filter #(viewport/mobile?))
         (.onValue (fn [_]
                     (set! (-> container (.-style) (.-height))
