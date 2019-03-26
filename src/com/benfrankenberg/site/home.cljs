@@ -66,7 +66,12 @@
         [:i.fas.fa-chevron-left]]
       [:button.headshots__btn.next
         {:value "next"}
-        [:i.fas.fa-chevron-right]]]])
+        [:i.fas.fa-chevron-right]]
+      [:div.swipe-hint
+       [:i.swipe-hint__icon.fas.fa-hand-point-left]
+       [:span.swipe-hint__text "Swipe left or right to navigate photos"]
+       [:i.swipe-hint__icon.fas.fa-hand-point-right]]]])
+
 
 (defn about
   []

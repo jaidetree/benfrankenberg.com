@@ -93,7 +93,7 @@
         (.doAction start-transition)
         (.delay 800)
         (.doAction end-transition)
-        (.doAction #(dom/swap-class! container to-el "active"))
+        (.doAction #(dom/swap-class! (query container ".slides") to-el "active"))
         (.map (constantly to)))))
 
 (defn set-container-height
@@ -183,13 +183,34 @@
       (.flatMap #(swipe {:el % :on-move scale-btn :on-end reset-btn-scale}))
       (.map #(gen-action (:direction %) (:selector %)))))
 
+(defn swipe-hint
+  [actions state]
+  (-> actions
+    (.takeWhile #(viewport/mobile?))
+    (action? :rotate)
+    (.flatMap (constantly state))
+    (.take 1)
+    (.map #(query (:selector %)))
+    (.doAction (fn [container]
+                 (let [el (query container ".swipe-hint")]
+                   (dom/add-classes! el ["active"]))))
+    (.flatMap #(-> actions
+                   (action? :rotate)
+                   (.take 1)
+                   (.map %)))
+    (.doAction (fn [container]
+                 (let [el (query container ".swipe-hint")]
+                   (dom/remove-classes! el ["active"]))))
+    (.filter false)))
+
 (def fx
   [button-events
    button-fx
    next-slide
    prev-slide
    rotate
-   swipe-events])
+   swipe-events
+   swipe-hint])
 
 ;; Public API
 ;; ---------------------------------------------------------------------------

@@ -1,6 +1,24 @@
 @import "reset";
 @import "shared";
 
+@keyframes bounce-left {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(rems(-5px));
+  }
+}
+
+@keyframes bounce-right {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(rems(5px));
+  }
+}
+
 // Base
 // ---------------------------------------------------------------------------
 * {
@@ -149,7 +167,6 @@ a:hover {
   position: absolute;
   left: 0;
   right: 0;
-  top: 80vh;
   color: #efb857;
   text-align: center;
   opacity: 0.6;
@@ -163,17 +180,6 @@ a:hover {
   font-size: rems(32px);
   vertical-align: top;
 }
-// .scroll-hint::before {
-//   display: inline-block;
-//   font-family: 'Font Awesome 5 Free';
-//   content: '\f078';
-//   font-size: rems(32px);
-//   opacity: 0.5;
-// }
-// .scroll-hint__text {
-//   display: none;
-// }
-
 
 .section {
   position: relative;
@@ -182,6 +188,33 @@ a:hover {
   background: rgba(#404134, 0.9);
   background: #393a2c;
   background: #121413;
+}
+
+.swipe-hint {
+  position: relative;
+  top: rems(180px);
+  left: 0;
+  right: 0;
+  text-align: center;
+  color: #efb857;
+  opacity: 0;
+  transform: translateY(rems(50px));
+  transition: all 1200ms ease;
+  text-shadow: #000 0 0 rems(3px);
+}
+.swipe-hint__text {
+  margin-left: rems(10px);
+  margin-right: rems(10px);
+}
+.swipe-hint.active {
+  opacity: 1.0;
+  transform: translateY(0);
+}
+.swipe-hint.active .swipe-hint__icon:first-child {
+  animation: 600ms infinite alternate bounce-left;
+}
+.swipe-hint.active .swipe-hint__icon:last-child {
+  animation: 600ms infinite alternate bounce-right;
 }
 
 @import "blocks/headshot";

@@ -75,7 +75,7 @@
   [source]
   (-> source
       (.debounce 100)
-      (.tap #(.reload browser-sync))))
+      (.tap #(.reload browser-sync (.-basename %)))))
 
 (defn dest
   [source out-dir]
