@@ -40,13 +40,15 @@
 
 (defn headshot
   [_ idx]
-  (let [src (str "/img/ben-frankenberg-headshot-" idx ".jpg")]
+  (let [file (str "ben-frankenberg-headshot-" idx ".jpg")
+        img (str "/img/" file)
+        download (str "/downloads/" file)]
     [:div.headshot
-      {:style {:background-image (str "url(" src ")")}}
+      {:style {:background-image (str "url(" img ")")}}
       [:img.headshot__img {:alt (str "Headshot #" idx " of Ben Frankenberg")
-                           :src src}]
+                           :src img}]
       [:a.btn.headshot__download
-        {:href src
+        {:href download
          :download true}
         [:i.inline.fas.fa-download]
         "Download"]]))
