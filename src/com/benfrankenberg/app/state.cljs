@@ -43,10 +43,8 @@
   (let [actions (Bus.)
         dispatch #(.push actions %)
         state (-> actions
-                  (.doAction #(println "incoming action" %))
                   (.scan initial (combine-reducers reducer-map))
-                  (.takeUntil bus)
-                  (.doAction #(println "resulting state" %)))]
+                  (.takeUntil bus))]
     (handle-fx (combine-fx fx) actions state dispatch)
     (.subscribe state identity)
     (dispatch {:type :initialize :data {}})

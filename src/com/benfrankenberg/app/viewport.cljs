@@ -3,8 +3,7 @@
 (defn screen-width
   []
   (-> js/window
-      (.-innerWidth)
-      (doto println)))
+      (.-innerWidth)))
 
 (defn mobile?
   []

@@ -24,10 +24,6 @@
 (defn go!
   []
   (-> (.once bacon 0)
-      (.doAction #(do
-                    (reset! time-started (.now js/Date))
-                    (println "Starting transition")))
       (.flatMap #(transition 1000 ease))
       (.doAction fade-in)
-      (.doEnd #(println "Transition elapsed time: " (- (.now js/Date) @time-started)))
       (.onEnd identity)))
