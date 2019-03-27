@@ -138,9 +138,6 @@
                  :media "screen and (max-width: 929px)"
                  :href "/css/mobile.css"}]
         [:link {:rel "stylesheet"
-                :media "screen and (min-width: 768px) and (max-width: 929px)"
-                :href "/css/tablet.css"}]
-        [:link {:rel "stylesheet"
                 :media "screen and (min-width: 930px)"
                 :href "/css/desktop.css"}]]
       [:body
