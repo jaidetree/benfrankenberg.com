@@ -1,6 +1,6 @@
 (ns src.com.benfrankenberg.tasks.lib.stream)
 
-(def stream (js/require "@eccentric-j/highland"))
+(def stream (js/require "highland"))
 
 (defn consume-observer
   [{on-error :error on-complete :complete on-next :next}]
@@ -69,5 +69,3 @@
                            (do (push nil x)
                                (push nil end)
                                (reset! ended true)))))))
-
-

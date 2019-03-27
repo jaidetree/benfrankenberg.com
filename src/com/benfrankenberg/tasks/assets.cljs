@@ -5,7 +5,7 @@
 
 (def gulp (js/require "gulp"))
 (def log (js/require "fancy-log"))
-(def stream (js/require "@eccentric-j/highland"))
+(def stream (js/require "highland"))
 
 (defn log-copy-file
   [file]

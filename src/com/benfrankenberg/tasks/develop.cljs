@@ -11,7 +11,7 @@
     [src.com.benfrankenberg.tasks.serve :refer [browser-sync]]))
 
 (def gulp (js/require "gulp"))
-(def stream (js/require "@eccentric-j/highland"))
+(def stream (js/require "highland"))
 (def Vinyl (js/require "vinyl"))
 
 (def sources #js ["./src/img/**/*"

@@ -7,7 +7,7 @@
 (def jpeg (js/require "imagemin-jpegtran"))
 (def log (js/require "fancy-log"))
 (def png (js/require "imagemin-pngquant"))
-(def stream (js/require "@eccentric-j/highland"))
+(def stream (js/require "highland"))
 
 (def gb (* 1024 1024 1024))
 (def mb (* 1024 1024))
@@ -64,4 +64,3 @@
       (.pipe (stream))
       (.flatMap (optimize-img {:jpg {:quality "65-80"}}))
       (.pipe (.dest gulp "./dist")))))
-

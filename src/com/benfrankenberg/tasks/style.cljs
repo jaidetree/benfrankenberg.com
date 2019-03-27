@@ -10,7 +10,7 @@
 (def log (js/require "fancy-log"))
 (def cssnano (js/require "cssnano"))
 (def postcss (js/require "postcss"))
-(def stream (js/require "@eccentric-j/highland"))
+(def stream (js/require "highland"))
 (def sass (js/require "node-sass"))
 (def Buffer (.-Buffer (js/require "buffer")))
 (def Vinyl (js/require "vinyl"))

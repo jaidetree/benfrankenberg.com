@@ -7,7 +7,7 @@
 
 (def cp (js/require "child_process"))
 (def log (js/require "fancy-log"))
-(def stream (js/require "@eccentric-j/highland"))
+(def stream (js/require "highland"))
 
 (defn tag-stream
   [type source]

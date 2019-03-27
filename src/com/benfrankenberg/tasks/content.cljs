@@ -11,7 +11,7 @@
 (def hiccup (js/require "@thi.ng/hiccup"))
 (def log (js/require "fancy-log"))
 (def reload (js/require "../../../src/js/hacks/reload.js"))
-(def stream (js/require "@eccentric-j/highland"))
+(def stream (js/require "highland"))
 (def Vinyl (js/require "vinyl"))
 
 (def cwd (.cwd js/process))
@@ -88,4 +88,3 @@
     []
     (-> (build-content)
         (.pipe (.dest gulp "dist")))))
-
