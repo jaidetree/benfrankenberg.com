@@ -4,8 +4,11 @@
             [src.com.benfrankenberg.tasks.lib.color :as c]
             [src.com.benfrankenberg.tasks.lib.util :refer [base glob? rename]]))
 
+(def autoprefixer (js/require "autoprefixer"))
 (def gulp (js/require "gulp"))
 (def log (js/require "fancy-log"))
+(def cssnano (js/require "cssnano"))
+(def postcss (js/require "postcss"))
 (def stream (js/require "@eccentric-j/highland"))
 (def sass (js/require "node-sass"))
 (def Buffer (.-Buffer (js/require "buffer")))
@@ -42,6 +45,18 @@
   [file-path]
   (s/replace file-path #"scss" "css"))
 
+(defn post-css
+  [{:keys [plugins]}]
+  (let [postcss (postcss (clj->js plugins))]
+    (fn [file]
+      (-> postcss
+          (.process (.-contents file) #js {:from (.-relative file)
+                                           :to (.-relative file)})
+          (stream)
+          (.map (fn [result]
+                  (let [css (.-css result)]
+                    (.clone file #js {:contents (.from Buffer css)}))))))))
+
 (defn scss
   [options]
   (fn [file]
@@ -52,6 +67,7 @@
         (render-css)
         (.map #(create-css-file file %))
         (.map #(rename % rename-scss-file))
+        (.flatMap (post-css {:plugins [autoprefixer cssnano]}))
         (.tap #(log-css-file (.-relative %))))))
 
 (defn scss->css
