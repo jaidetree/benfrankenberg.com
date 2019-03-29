@@ -27,22 +27,31 @@
                      (.take 1)
                      (.map (constantly %))))))
 
-(def time-started (atom 0))
+(defn ms-elapsed
+  []
+  (-> (.once bacon (.now js/Date))
+      (.flatMap #(-> (frames)
+                     (.map (.now js/Date))
+                     (.map (fn [start]
+                             (- (.now js/Date) start)))))))
+
+(defn px-per-second
+  [px]
+  (-> (ms-elapsed)
+      (.map (fn [ms] (/ (* px ms) 1000)))))
+
+(defn duration
+  [ms]
+  (-> (ms-elapsed)
+      (.map (fn [ems] (/ ems ms)))
+      (.takeWhile #(< % 1))
+      (.concat (next-frame 1))))
 
 (defn ease
-  [x]
-  (* x x))
-
-(defn transition
-  "Takes a duration in ms and an easing function.
-  Returns a bacon stream that emits a percentage so that it reaches 1 at the
-  end of the duration."
-  [duration ease-fn]
-  (-> (.interval bacon (/ duration 100) 0)
-      (.scan 0 inc)
-      (.takeWhile #(<= % 100))
-      (.map #(/ % 100))
-      (.map ease-fn)))
+  [t]
+  (if (< t 0.5)
+    (* 4.0 t t t)
+    (+ 1.0 (* 0.5 (.pow js/Math (- (* 2.0 t) 2.0) 3.0)))))
 
 (defn fade-in
   "Fade the body element in.
@@ -52,21 +61,13 @@
   (set! (-> js/document (.-body) (.-style) (.-opacity))
         opacity))
 
-(defn ms-elapsed
-  []
-  (-> (.once bacon (.now js/Date))
-      (.flatMap (fn [_]
-                  (-> (.interval bacon 0 (.now js/Date))
-                      (.combine (frames) (fn [x _] x))
-                      (.map (fn [start]
-                              (- (.now js/Date) start))))))))
-
 (defn go!
   "Run the animation"
   []
-  (-> (ms-elapsed)
+  (-> (duration 1000)
+      (.map ease)
       (.takeUntil bus)
-      (.take 25)
+      (.doAction fade-in)
       (.log)))
   ; (-> (.once bacon 0)
   ;     (.flatMap #(transition 1000 ease))
