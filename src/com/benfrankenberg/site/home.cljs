@@ -130,12 +130,12 @@
         [:link {:rel "mask-icon"
                 :href "/safari-pinned-tab.svg"}]
         [:link {:rel "stylesheet"
+                :href "https://fonts.googleapis.com/css?family=Alegreya|Raleway"}]
+        [:link {:rel "stylesheet"
                 :href "https://use.fontawesome.com/releases/v5.7.2/css/all.css"
                 :crossorigin "anonymous"}]
         [:link {:rel "stylesheet"
                 :href "/css/style.css"}]
-        [:link {:rel "stylesheet"
-                :href "https://fonts.googleapis.com/css?family=Alegreya|Raleway"}]
         [:link {:rel "stylesheet"
                  :media "screen and (max-width: 929px)"
                  :href "/css/mobile.css"}]
@@ -150,5 +150,5 @@
           (list (background)
                 (hero)
                 (about))]
-        [:script {:src "https://cdnjs.cloudflare.com/ajax/libs/bacon.js/2.0.11/Bacon.min.js"}]
+        [:script {:src "https://cdnjs.cloudflare.com/ajax/libs/bacon.js/3.0.0/Bacon.min.js"}]
         [:script {:src "/js/app.js"}]]]))
