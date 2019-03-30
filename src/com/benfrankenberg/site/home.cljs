@@ -20,7 +20,7 @@
   []
   [:div.group.bio
     [:h3.display "About Benjamin Frankenberg"]
-    [:p.text.mt "Ben is a professional actor with experience in a wide selection of mediums such as theater, film, TV, and movies. He breathes life into characters by incorporating both technical acting techniques and his personal artistic vision to delight and inspire audiences. Like many great actors, Ben works hard to provide strong characterization into every element in both grand movements and subtle ticks to create memorable characters that reach deep within our minds and souls. Ben currently holds a Bachelors in Performing Arts degree from Savannah College School of Art and Design."]])
+    [:p.text.mt "Ben is a professional actor working in a wide range of mediums such as film, television, theater and experimental works. He breathes life into his characters by incorporating both studied performance techniques and his own artistic vision to captivate and inspire audiences. Through the lens of his experience, Ben works to provide intuitive, enigmatic and dynamic characters whose spirits linger long in the minds and memory of those who witness. Ben holds a Bachelor in Performing Arts degree from the Savannah College of Art & Design and has trained in stage combat through the Society of American Fight Directors."]])
 
 (defn links
   []
