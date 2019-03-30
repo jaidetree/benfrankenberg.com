@@ -1,6 +1,10 @@
 (ns com.benfrankenberg.app.util
   (:require [bacon :as bacon]))
 
+(defn prop
+  [key]
+  (fn [data] (get data key)))
+
 (defn query
   ([selector]
    (query js/document selector))

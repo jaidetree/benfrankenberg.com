@@ -33,8 +33,9 @@
   left: 0;
   top: 0;
   height: 100%;
+  width: 25%;
   background: #efb857;
-  transition: width 800ms ease;
+  transition: left 800ms ease;
 }
 .headshots__btn {
   position: absolute;

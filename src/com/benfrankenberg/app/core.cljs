@@ -10,12 +10,20 @@
 (def bacon (.-Bacon js/window))
 
 (defn init!
+  "
+  Initialize our app.
+  "
   []
   (scroll-hero-opacity)
   (rotator ".headshots")
   (go!))
 
 (defn reload!
+  "
+  Restart the app.
+  Only called during development.
+  Should be factored out inproduction.
+  "
   []
   (println "Reloading!")
   (.push bus (.now js/Date))
