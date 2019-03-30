@@ -1,6 +1,5 @@
 # Bacon.js - Methods shouldn't change but may need to add more
 global:Bacon
-combineWithLatest
 delay
 doAction
 doEnd
@@ -24,8 +23,10 @@ merge
 sampledBy
 scan
 skipWhile
+startWith
 subscribe
 take
 takeUntil
 takeWhile
+withLatestFrom
 zip
