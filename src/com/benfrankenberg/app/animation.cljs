@@ -23,8 +23,7 @@
   [source]
   (-> source
       (.flatMap #(-> (frames)
-                     (.take 3)
-                     (.last)
+                     (.take 1)
                      (.map (constantly %))))))
 
 (def time-started (atom 0))

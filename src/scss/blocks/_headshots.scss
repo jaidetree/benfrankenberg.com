@@ -88,10 +88,13 @@
 }
 
 .headshots__item.active {
-  z-index: 100;
+  z-index: 200;
+  transform: translatex(0);
+  opacity: 1.0;
 }
 .headshots__item.active .headshot__download {
   transform: translateY(0);
+  top: auto;
 }
 
 .headshots__item.transition {
@@ -100,17 +103,18 @@
 .headshots__item.transition .headshot__download {
   transform: translateY(200%);
 }
+
 .headshots__item.rotate {
-  transition: all 800ms ease;
+  transition: transform 800ms ease;
 }
 
-.headshots__item.from {
-  transform: translatex(0);
+.headshots__item.to {
+  z-index: 100;
 }
+
 .headshots__item.forwards.to {
   transform: translatex(100%);
 }
-
 .headshots__item.forwards.rotate.from {
   transform: translatex(-100%);
 }

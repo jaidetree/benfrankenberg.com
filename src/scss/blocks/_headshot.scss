@@ -10,7 +10,7 @@
   right: rems(32px);
   bottom: rems(32px);
   transform: translateY(200%);
-  transition: all 250ms ease;
+  transition: transform 800ms ease 100ms;
 }
 .headshot__img {
   width: 100%;

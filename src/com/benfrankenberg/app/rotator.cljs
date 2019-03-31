@@ -186,7 +186,9 @@
         (.map #(merge % {:from-el from-el
                          :to-el to-el
                          :direction-cls (name direction)}))
+        (animation/delay-frame)
         (.doAction prepare-transition)
+        (animation/delay-frame)
         (animation/delay-frame)
         (.doAction start-transition)
         (.delay 800)
