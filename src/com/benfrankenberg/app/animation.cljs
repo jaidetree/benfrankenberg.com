@@ -2,6 +2,7 @@
   (:refer-clojure :exclude [range])
   (:require
    [bacon :as bacon :refer [End]]
+   [com.benfrankenberg.app.state :refer [bus]]
    [com.benfrankenberg.app.raf :refer [cancel-frame-request request-frame]]))
 
 (defn loop-frames
@@ -33,6 +34,9 @@
   (* x x))
 
 (defn transition
+  "Takes a duration in ms and an easing function.
+  Returns a bacon stream that emits a percentage so that it reaches 1 at the
+  end of the duration."
   [duration ease-fn]
   (-> (.interval bacon (/ duration 100) 0)
       (.scan 0 inc)
@@ -41,13 +45,30 @@
       (.map ease-fn)))
 
 (defn fade-in
+  "Fade the body element in.
+  Takes the opacity as a float percentage.
+  Mutates the style of the HTML body tag."
   [opacity]
   (set! (-> js/document (.-body) (.-style) (.-opacity))
         opacity))
 
-(defn go!
+(defn ms-elapsed
   []
-  (-> (.once bacon 0)
-      (.flatMap #(transition 1000 ease))
-      (.doAction fade-in)
-      (.onEnd identity)))
+  (-> (.once bacon (.now js/Date))
+      (.flatMap (fn [_]
+                  (-> (.interval bacon 0 (.now js/Date))
+                      (.combine (frames) (fn [x _] x))
+                      (.map (fn [start]
+                              (- (.now js/Date) start))))))))
+
+(defn go!
+  "Run the animation"
+  []
+  (-> (ms-elapsed)
+      (.takeUntil bus)
+      (.take 25)
+      (.log)))
+  ; (-> (.once bacon 0)
+  ;     (.flatMap #(transition 1000 ease))
+  ;     (.doAction fade-in)
+  ;     (.onEnd identity)))
