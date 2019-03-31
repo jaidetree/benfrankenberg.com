@@ -2,4 +2,4 @@
 
 (def gulp (js/require "gulp"))
 
-(.task gulp "build" (.parallel gulp "style" "content" "images"))
+(.task gulp "build" (.series gulp "style" "content" "images" "assets" "scripts"))

@@ -1,8 +1,30 @@
-@import "shared";
 @import "reset";
+@import "shared";
+
+@keyframes bounce-left {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(rems(-5px));
+  }
+}
+
+@keyframes bounce-right {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(rems(5px));
+  }
+}
 
 // Base
 // ---------------------------------------------------------------------------
+* {
+  box-sizing: border-box;
+}
+
 html, body {
   text-size-adjust: none;
   -webkit-text-size-adjust: none;
@@ -10,34 +32,49 @@ html, body {
   -ms-text-size-adjust: none;
 }
 
+html {
+}
+
+body, a, p, input {
+  @extend %body-font;
+}
+
 body {
   background: #404134;
-  @extend %body-font;
 }
 
 h1, h2, h3, h4, h5 {
   color: #f4ddda;
+  font-weight: normal;
 }
 
 h1 {
-  font-size: 7vh;
+  font-size: rems(50px);
   line-height: 1.2;
 }
 
 h2 {
-  font-size: 3vh;
+  font-size: rems(42px);
 }
 
 h3 {
-  font-size: 1.5vh;
+  font-size: rems(36px);
 }
 
 h4 {
-  font-size: 1vh;
+  font-size: rems(24px);
 }
 
 h5 {
-  font-size: 0.5vh;
+  font-size: rems(18px);
+}
+
+a {
+  color: #F0B94D;
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
 }
 
 // Blocks
@@ -48,19 +85,137 @@ h5 {
 .display {
   @extend %display-font;
 }
-.hero {
-  position: relative;
+.text {
+  @extend %body-font;
+  color: #788C6C;
+  color: #80A36C;
+  color: #90A29B;
+  font-size: rems(20px);
+  line-height: 1.8;
+}
+
+.ml {
+  margin-left: rems(32px);
+}
+.mt {
+  margin-top: rems(32px);
+}
+
+.background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
   background: url(/img/ben_hero.jpg);
   background-size: cover;
   background-position: 25% 30%;
-  height: 100vh;
+  background-repeat: no-repeat;
+  z-index: -1;
+}
+
+.btn {
+  display: inline-block;
+  border: rems(1px) solid #F0B94D;
+  padding: rems(16px) rems(24px);
+  border-radius: rems(3px);
+  color: #F0B94D;
+  font-size: rems(20px);
+  text-align: center;
+}
+.btn:hover {
+  background: rgba(#F0B94D, 0.2);
+  text-decoration: none;
+}
+.btn [class*="fa-"] {
+  font-size: rems(24px);
+}
+
+.column {
+  flex: 1 1 auto;
+  position: relative;
+  padding: rems(32px);
+}
+
+.hero {
+  position: relative;
 }
 .hero__inner {
-  position: fixed;
-  right: 2vw;
-  bottom: 2vw;
-  padding: 2vw;
+  position: absolute;
+  z-index: 5;
 }
 .hero__title {
   text-transform: uppercase;
 }
+.hero__subtitle {
+  font-size: rems(24px);
+}
+
+.inline {
+  margin-right: rems(12px);
+}
+
+.links {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+}
+.links__link {
+  margin-bottom: rems(24px);
+}
+
+.scroll-hint {
+  position: absolute;
+  left: 0;
+  right: 0;
+  color: #efb857;
+  text-align: center;
+  opacity: 0.6;
+}
+.scroll-hint__icon {
+  display: inline-block;
+  position: relative;
+  top: rems(-6px);
+  margin-left: rems(10px);
+  margin-right: rems(10px);
+  font-size: rems(32px);
+  vertical-align: top;
+}
+
+.section {
+  position: relative;
+  min-height: 100vh;
+  padding: 0;
+  background: rgba(#404134, 0.9);
+  background: #393a2c;
+  background: #121413;
+}
+
+.swipe-hint {
+  position: relative;
+  top: rems(180px);
+  left: 0;
+  right: 0;
+  text-align: center;
+  color: #efb857;
+  opacity: 0;
+  transform: translateY(rems(50px));
+  transition: all 1200ms ease;
+  text-shadow: #000 0 0 rems(3px);
+}
+.swipe-hint__text {
+  margin-left: rems(10px);
+  margin-right: rems(10px);
+}
+.swipe-hint.active {
+  opacity: 1.0;
+  transform: translateY(0);
+}
+.swipe-hint.active .swipe-hint__icon:first-child {
+  animation: 600ms infinite alternate bounce-left;
+}
+.swipe-hint.active .swipe-hint__icon:last-child {
+  animation: 600ms infinite alternate bounce-right;
+}
+
+@import "blocks/headshot";
+@import "blocks/headshots";

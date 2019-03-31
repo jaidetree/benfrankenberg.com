@@ -1,0 +1,19 @@
+.headshot {
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: 50% 50%;
+  overflow: hidden;
+}
+.headshot__download {
+  position: absolute;
+  right: rems(32px);
+  bottom: rems(32px);
+  transform: translateY(200%);
+  transition: transform 800ms ease 100ms;
+}
+.headshot__img {
+  width: 100%;
+  height: auto;
+  opacity: 0;
+}

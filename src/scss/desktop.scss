@@ -2,5 +2,92 @@
 
 // Blocks
 // ---------------------------------------------------------------------------
+.about__headshot {
+  order: 1;
+  width: 48vw;
+}
+.about__content {
+  order: 2;
+  width: 52vw;
+}
+
+.background {
+  height: 100vh;
+}
+
+.group {
+  margin-bottom: rems(64px);
+}
+
+.headshot__download {
+  display: inline-block;
+  border-radius: rems(32px);
+  width: rems(48px);
+  height: rems(48px);
+  padding: 0;
+  padding-left: rems(10px);
+  padding-top: rems(8px);
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  transition: all 250ms ease-in-out;
+}
+.headshot__download:hover {
+  padding: rems(8px) rems(17px);
+  width: rems(170px);
+  border-radius: rems(3px);
+}
+.headshots__item {
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+
+.headshots {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+}
+
+.hero {
+  height: 100vh;
+}
 .hero__inner {
+  right: rems(64px);
+  bottom: rems(64px);
+}
+
+.section {
+  display: flex;
+  flex-flow: row nowrap;
+}
+
+.scroll-hint {
+  bottom: rems(6px);
+  opacity: 0.3;
+}
+
+// Media Queries
+// ---------------------------------------------------------------------------
+
+@media (max-width: 1200px) {
+  .links__link.resume,
+  .links__link.credits,
+  .links__link.email {
+    flex: 1 1 100%;
+  }
+}
+
+@media (min-width: 1200px) {
+  .links__link.resume,
+  .links__link.credits {
+    flex: 0 1 48%;
+  }
+  .links__link.email {
+    flex: 1 1 100%;
+  }
 }

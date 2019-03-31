@@ -3,7 +3,7 @@
     [clojure.string :as s]
     [goog.object :as obj]
     [src.com.benfrankenberg.tasks.lib.color :as c]
-    [src.com.benfrankenberg.tasks.lib.util :refer [glob?]]))
+    [src.com.benfrankenberg.tasks.lib.util :refer [base glob?]]))
 
 (def Buffer (.-Buffer (js/require "buffer")))
 (def cljs (js/require "clojurescript"))
@@ -11,7 +11,7 @@
 (def hiccup (js/require "@thi.ng/hiccup"))
 (def log (js/require "fancy-log"))
 (def reload (js/require "../../../src/js/hacks/reload.js"))
-(def stream (js/require "@eccentric-j/highland"))
+(def stream (js/require "highland"))
 (def Vinyl (js/require "vinyl"))
 
 (def cwd (.cwd js/process))
@@ -42,6 +42,11 @@
                (c/data file-type)
                "page"
                (c/file filename))))
+
+(defn src-hiccup
+  [_]
+  (-> (.src gulp "src/com/benfrankenberg/site/**/*.cljs" #js {:base (base)})
+      (stream)))
 
 (defn load-render-fn
   [render-sym]
@@ -83,4 +88,3 @@
     []
     (-> (build-content)
         (.pipe (.dest gulp "dist")))))
-

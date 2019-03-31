@@ -9,3 +9,63 @@ h1, h2 {
 
 // Blocks
 // ---------------------------------------------------------------------------
+
+.about__headshot {
+  padding: 0;
+}
+
+.background {
+  height: 100vh;
+  max-height: rems(720px);
+}
+
+.desktop {
+  display: none;
+}
+
+.btn {
+  display: block;
+  width: 100%;
+}
+
+.group {
+  margin-bottom: rems(32px);
+}
+
+.headshot__download {
+  left: 0;
+  right: 0;
+  width: 90%;
+  margin: auto;
+}
+
+.headshots {
+  position: relative;
+  height: rems(566px);
+  overflow: hidden;
+}
+
+.headshots__item {
+  flex: 0 0 100%;
+}
+
+.hero {
+  height: 100vh;
+  max-height: rems(720px);
+}
+.hero__inner {
+  left: rems(16px);
+  bottom: rems(88px);
+  z-index: 5;
+}
+
+.profile-photo__img {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 0 auto;
+}
+
+.scroll-hint {
+  top: rems(666px);
+}

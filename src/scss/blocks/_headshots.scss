@@ -1,0 +1,134 @@
+@keyframes pulse {
+  from {
+    opacity: 1.0;
+    transform: scale(1.0);
+  }
+  to {
+    opacity: 0;
+    transform: scale(3.0);
+  }
+}
+
+.headshots__ui {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  height: rems(48px);
+  margin: auto rems(32px);
+  z-index: 200;
+}
+.headshots__progress-bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: rems(5px);
+  background: black(50%);
+  z-index: 200;
+}
+.headshots__progress {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 25%;
+  background: #efb857;
+  transition: left 800ms ease;
+}
+.headshots__btn {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: rems(48px);
+  height: rems(48px);
+  margin: auto;
+  padding: 0;
+  background: none;
+  border-radius: 50%;
+  border: 1px solid #efb857;
+  color: #efb857;
+  font-size: rems(24px);
+  text-align: center;
+  outline: none;
+  opacity: 0.5;
+  transition: background 250ms ease-in-out, opacity 250ms ease;
+}
+.headshots__btn:hover {
+  opacity: 1;
+  background: rgba(#efb857, 0.25);
+}
+.headshots__btn.prev {
+  left: 0;
+}
+.headshots__btn.next {
+  right: 0;
+}
+.headshots__btn.active {
+  opacity: 1;
+}
+.headshots__btn::before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  border-radius: 50%;
+  border: rems(1px) solid #F0B94D;
+  opacity: 0;
+  content: "";
+}
+.headshots__btn.active::before {
+  animation: pulse 500ms ease-out 0ms 1 forwards;
+}
+
+.headshots__item {
+  position: absolute;
+}
+
+.headshots__item.active {
+  z-index: 200;
+  transform: translatex(0);
+  opacity: 1.0;
+}
+.headshots__item.active .headshot__download {
+  transform: translateY(0);
+  top: auto;
+}
+
+.headshots__item.transition {
+  z-index: 100;
+}
+.headshots__item.transition .headshot__download {
+  transform: translateY(200%);
+}
+
+.headshots__item.rotate {
+  transition: transform 800ms ease;
+}
+
+.headshots__item.to {
+  z-index: 100;
+}
+
+.headshots__item.forwards.to {
+  transform: translatex(100%);
+}
+.headshots__item.forwards.rotate.from {
+  transform: translatex(-100%);
+}
+.headshots__item.forwards.rotate.to {
+  transform: translatex(0);
+}
+
+.headshots__item.backwards.to {
+  transform: translatex(-100%);
+}
+
+.headshots__item.backwards.rotate.from {
+  transform: translatex(100%);
+}
+.headshots__item.backwards.rotate.to {
+  transform: translatex(0);
+}

@@ -1,0 +1,13 @@
+{:dependencies []
+ :source-paths ["src"]
+ :builds {:app {:target :browser
+                :output-to "dist/js/app.js"
+                :output-dir "dist/js"
+                :asset-path "/js"
+                :js-options {:resolve {"bacon"  {:target :global
+                                                 :global "Bacon"}}}
+                :devtools {:after-load com.benfrankenberg.app.core/reload!}
+                :modules {:app {:entries [com.benfrankenberg.app.core]
+                                :init-fn com.benfrankenberg.app.core/init!}}
+                :release {:compiler-options {:optimizations :advanced
+                                             :infer-externs :auto}}}}}

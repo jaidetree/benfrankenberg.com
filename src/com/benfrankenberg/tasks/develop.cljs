@@ -2,18 +2,27 @@
   (:require
     [src.com.benfrankenberg.tasks.lib.cache :refer [cache-file file-updated? hash-file]]
     [src.com.benfrankenberg.tasks.lib.util :refer [base glob?]]
-    [src.com.benfrankenberg.tasks.content :refer [hiccup->html]]
-    [src.com.benfrankenberg.tasks.images :refer [optimize-images]]
-    [src.com.benfrankenberg.tasks.style :refer [scss->css]]
+    [src.com.benfrankenberg.tasks.lib.stream :as stream]
+    [src.com.benfrankenberg.tasks.assets :refer [copy-public-file src-public]]
+    [src.com.benfrankenberg.tasks.scripts :refer [cljs->js]]
+    [src.com.benfrankenberg.tasks.content :refer [hiccup->html src-hiccup]]
+    [src.com.benfrankenberg.tasks.images :refer [optimize-images src-images]]
+    [src.com.benfrankenberg.tasks.style :refer [scss->css src-scss]]
     [src.com.benfrankenberg.tasks.serve :refer [browser-sync]]))
 
-(def stream (js/require "@eccentric-j/highland"))
 (def gulp (js/require "gulp"))
+(def stream (js/require "highland"))
 (def Vinyl (js/require "vinyl"))
 
 (def sources #js ["./src/img/**/*"
                   "./src/scss/**/*.scss"
                   "./src/com/benfrankenberg/site/**/*.cljs"])
+
+(defn log-file
+  [file]
+  (println {:path (.-path file)
+            :hash (.-hash file)
+            :built? (.-built file)}))
 
 (defn watch-sources
   [globs]
@@ -23,11 +32,12 @@
                             :base (base)
                             :event (.-event %)})))))
 
-(defn read-source-files
-  [globs]
-  (fn [_]
-    (-> (.src gulp globs #js {:base (base)})
-        (stream))))
+(defn src
+  [file src-fns]
+  (-> ((apply juxt src-fns) file)
+      (clj->js)
+      (stream)
+      (.series)))
 
 (defn start-with
   [source-stream value]
@@ -35,12 +45,6 @@
     (-> #js [value-stream source-stream]
         (stream)
         (.merge))))
-
-(defn log-file
-  [file]
-  (println {:path (.-path file)
-            :hash (.-hash file)
-            :built? (.-built file)}))
 
 (defn built?
   [file]
@@ -52,7 +56,7 @@
   file)
 
 (defn run-build
-  [f source]
+  [source f]
   (-> source
       (.fork)
       (.through f)
@@ -60,7 +64,7 @@
 
 (defn build
   [source fs]
-  (-> (map #(run-build % source) fs)
+  (-> (map #(run-build source %) fs)
       (vec)
       (conj (.fork source))
       (clj->js)
@@ -70,9 +74,8 @@
 (defn refresh
   [source]
   (-> source
-      (.filter (glob? ["dist/img/**/*.{jpg,png}"]))
       (.debounce 100)
-      (.tap #(.reload browser-sync))))
+      (.tap #(.reload browser-sync (.-basename %)))))
 
 (defn dest
   [source out-dir]
@@ -80,20 +83,29 @@
       (.pipe (.dest gulp out-dir))
       (.pipe (stream))))
 
+(defn report-error
+  [err _]
+  (.error js/console err))
+
 (.task gulp "watch"
   (fn []
     (-> (watch-sources sources)
         (.throttle 250)
-        (start-with (Vinyl.))
-        (.flatMap (read-source-files
-                    (.concat sources "!./src/scss/**/_*.scss")))
+        (start-with (Vinyl. #js {:path "." :basename "root"}))
+        (.flatMap #(src % [src-scss
+                           src-hiccup
+                           src-images
+                           src-public]))
         (.tap hash-file)
         (.filter file-updated?)
         (.tap cache-file)
         (build [scss->css
                 hiccup->html
-                optimize-images])
+                optimize-images
+                copy-public-file])
+        (stream/merge [(cljs->js)])
         (.filter built?)
+        (.errors report-error)
         (dest "./dist")
         (refresh))))
 

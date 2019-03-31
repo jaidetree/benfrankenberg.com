@@ -22,6 +22,16 @@
            tests (map glob->pred patterns)]
       (every? (fn [test] (test path)) tests)))))
 
+(defn obj->clj
+  "Convert an object to clojure hash map. Not ideal but because objects may
+  be created outside of this context it may fail a js->clj due to js/Object
+  not matching the one from the context.
+  Takes a JS object.
+  Returns a Clojure hash-map."
+  [o]
+  (-> (.assign js/Object #js {} o)
+      (js->clj :keywordize-keys true)))
+
 (defn rename
   [file f]
   (set! (.-path file) (f (.-path file)))
