@@ -3,7 +3,8 @@
   (:require
    [bacon :as bacon :refer [End]]
    [com.benfrankenberg.app.state :refer [bus]]
-   [com.benfrankenberg.app.raf :refer [cancel-frame-request request-frame]]))
+   [com.benfrankenberg.app.raf :refer [cancel-frame-request request-frame]]
+   [com.benfrankenberg.app.stream :as stream]))
 
 (defn loop-frames
   [id cb]
@@ -26,6 +27,11 @@
       (.flatMap #(-> (frames)
                      (.take 1)
                      (.map (constantly %))))))
+
+(defn next-frame
+  [data]
+  (-> (stream/of data)
+      (delay-frame)))
 
 (defn ms-elapsed
   []
