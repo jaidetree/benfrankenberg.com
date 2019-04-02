@@ -164,6 +164,24 @@
   (dom/toggle-class! from-el "transition" "from" "rotate" direction-cls)
   (dom/toggle-class! to-el   "transition" "to"   "rotate" direction-cls))
 
+(defn translate-x
+  [el percent]
+  (set! (-> el (.-style) (.-transform))
+        (str "translateX(" percent "%)")))
+
+(defn animate-slides
+  [{:keys [from-el to-el direction]}]
+  (println "animation start")
+  (-> (animation/duration 800)
+      (.map animation/ease)
+      (.doAction
+       (fn [progress]
+         (let [from-progress (* progress -100)
+               to-progress (- 100 (* progress 100))]
+            (translate-x from-el from-progress)
+            (translate-x to-el to-progress))))
+      (.last)))
+
 (defn rotate-slide-elements
   "
   Rotate two slide elements by toggling classes over time. Kinda like a
@@ -186,13 +204,14 @@
         (.map #(merge % {:from-el from-el
                          :to-el to-el
                          :direction-cls (name direction)}))
-        (animation/delay-frame)
-        (.doAction prepare-transition)
-        (animation/delay-frame)
-        (animation/delay-frame)
-        (.doAction start-transition)
-        (.delay 800)
-        (.doAction end-transition)
+        ; (animation/delay-frame)
+        (.flatMap animate-slides)
+        ; (.doAction prepare-transition)
+        ; (animation/delay-frame)
+        ; (.doAction start-transition)
+        ; (.delay 800)
+        ; (.doAction end-transition)
+        (.doAction #(println "animation end"))
         (.doAction #(dom/swap-class! (query container ".slides") to-el "active"))
         (.map (constantly to)))))
 
