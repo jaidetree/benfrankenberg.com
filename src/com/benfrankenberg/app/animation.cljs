@@ -99,6 +99,25 @@
     (* 4.0 t t t)
     (+ 1.0 (* 0.5 (.pow js/Math (- (* 2.0 t) 2.0) 3.0)))))
 
+(defn cubicInOut
+  [t]
+  (- (* 3 (* t t))
+     (* 2 (* t t t))))
+
+(defn quadInOut
+  [t]
+  (let [x (/ t 0.5)]
+    (if (< x 1)
+      (* 0.5 x x)
+      (let [x (dec x)]
+        (* -0.5 (- (* x (- x 2)) 1))))))
+
+(defn quartInOut
+  [t]
+  (if (< t 0.5)
+    (* 8.0 (.pow js/Math t 4))
+    (+ (* -8.0 (.pow js/Math (- t 1.0) 4)) 1.0)))
+
 ;; Effects
 ;; ---------------------------------------------------------------------------
 
@@ -125,3 +144,13 @@
   ;     (.flatMap #(transition 1000 ease))
   ;     (.doAction fade-in)
   ;     (.onEnd identity)))
+
+(comment
+  (quadInOut 0.005)
+  (ease 0.8)
+
+  (quartInOut 0.1)
+  (quartInOut 0.25)
+  (quartInOut 0.5)
+  (quartInOut 0.75)
+  (quartInOut 1))

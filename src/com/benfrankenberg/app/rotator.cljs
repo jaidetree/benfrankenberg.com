@@ -173,7 +173,7 @@
   [{:keys [from-el to-el direction]}]
   (println "animation start")
   (-> (animation/duration 800)
-      (.map animation/ease)
+      (.map animation/quadInOut)
       (.doAction
        (fn [progress]
          (let [from-progress (* progress -100)
