@@ -99,12 +99,12 @@
     (* 4.0 t t t)
     (+ 1.0 (* 0.5 (.pow js/Math (- (* 2.0 t) 2.0) 3.0)))))
 
-(defn cubicInOut
+(defn cubic
   [t]
   (- (* 3 (* t t))
      (* 2 (* t t t))))
 
-(defn quadInOut
+(defn quad
   [t]
   (let [x (/ t 0.5)]
     (if (< x 1)
@@ -112,11 +112,15 @@
       (let [x (dec x)]
         (* -0.5 (- (* x (- x 2)) 1))))))
 
-(defn quartInOut
+(defn quart
   [t]
   (if (< t 0.5)
     (* 8.0 (.pow js/Math t 4))
     (+ (* -8.0 (.pow js/Math (- t 1.0) 4)) 1.0)))
+
+(defn sine
+  [t]
+  (* -0.5 (- (.cos js/Math (* (.-PI js/Math) t)) 1)))
 
 ;; Effects
 ;; ---------------------------------------------------------------------------
@@ -149,8 +153,14 @@
   (quadInOut 0.005)
   (ease 0.8)
 
-  (quartInOut 0.1)
-  (quartInOut 0.25)
-  (quartInOut 0.5)
-  (quartInOut 0.75)
-  (quartInOut 1))
+  (quart 0.1)
+  (quart 0.25)
+  (quart 0.5)
+  (quart 0.75)
+  (quart 1)
+
+  (sine 0.1)
+  (sine 0.25)
+  (sine 0.5)
+  (sine 0.75)
+  (sine 1))
