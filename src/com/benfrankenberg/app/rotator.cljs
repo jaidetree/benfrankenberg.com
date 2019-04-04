@@ -75,13 +75,10 @@
   "
   [{:keys [el scale selector]}]
   (let [btn (query el selector)
-        style (.-style btn)
         size (+ 1 (* scale 0.5))
         opacity (+ 0.5 (* scale 0.5))]
-    (set! (.-transform style)
-          (str "scale(" size ")"))
-    (set! (.-opacity style)
-          opacity)))
+    (dom/style! btn :transform (str "scale(" size ")")
+                    :opacity opacity)))
 
 (defn reset-btn-scale
   "
@@ -92,12 +89,9 @@
   "
   [{:keys [el]}]
   (doseq [selector [".prev" ".next"]]
-    (let [btn (query el selector)
-          style (.-style btn)]
-      (set! (.-transform style)
-            "scale(1)")
-      (set! (.-opacity style)
-            ""))))
+    (let [btn (query el selector)]
+      (dom/style! btn :transform (str "")
+                      :opacity ""))))
 
 (defn next-idx
   "
@@ -117,6 +111,15 @@
   [idx total]
   (if (<= idx 0) total idx))
 
+(defn translate
+  "
+  Format percent like 85 into \"translateX(85%)\"
+  Takes a percent float.
+  Returns a CSS transform value string.
+  "
+  [percent]
+  (str "translateX(" percent "%)"))
+
 (defn prepare-transition
   "
   Prepares the target elements for a rotation transition.
@@ -124,68 +127,81 @@
   Takes a rotate map:
   from-el       DOMElement - Current target element
   to-el         DOMElement - Next target element
-  direction-cls str        - Class name like \"forwards\" or \"backwards\"
 
-  Mutates the class names of the target elements.
-  Returns the next target el.
-  "
-  [{:keys [from-el to-el direction-cls]}]
-  (dom/toggle-class! from-el "transition" "from" direction-cls)
-  (dom/toggle-class! to-el   "transition" "to"   direction-cls))
-
-(defn start-transition
-  "
-  Starts rotating the target elements by adding a rotate class.
-
-  Takes a rotate map:
-  from-el       DOMElement - Current target element
-  to-el         DOMElement - Next target element
-
-  Mutates the class names of the target elements.
+  Mutates the zIndex property of the target elements.
   Returns the next target el.
   "
   [{:keys [from-el to-el]}]
-  (dom/toggle-class! from-el "rotate")
-  (dom/toggle-class! to-el   "rotate"))
+  (dom/style! from-el :zIndex "200")
+  (dom/style! to-el   :zIndex "200"))
 
-(defn end-transition
+(defn translate-slides
+  "
+  Translates two slides based on percentages.
+
+  Takes a map of from and to translations:
+  {:from {:el      DOMElement - DOM element to translate
+          :percent Number     - Percentage to translate 0 – 100}
+   :to   {:el      DOMElement - DOM element to translate
+          :percent Number     - Percentage to translate 0 – 100}
+
+  Mutates each element's transform style property.
+
+  Returns the next target element.
+  "
+  [{:keys [from to]}]
+  (dom/style! (:el from) :transform (translate (:percent from)))
+  (dom/style! (:el to) :transform (translate (:percent to))))
+
+(defn animate-slides
   "
   Removes transition classes after a rotation.
 
   Takes a rotate map:
-  from-el       DOMElement - Current target element
-  to-el         DOMElement - Next target element
-  direction-cls str        - Class name like \"forwards\" or \"backwards\"
+  from-el   DOMElement - Current target element
+  to-el     DOMElement - Next target element
+  direction keyword    - Class name like \"forwards\" or \"backwards\"
 
-  Mutates the class names of the target elements.
+  Mutates the styles to remove transition properties.
   Returns the next target el.
   "
-  [{:keys [from-el to-el direction-cls]}]
-  (dom/toggle-class! from-el "transition" "from" "rotate" direction-cls)
-  (dom/toggle-class! to-el   "transition" "to"   "rotate" direction-cls))
-
-(defn translate-x
-  [el percent]
-  (set! (-> el (.-style) (.-transform))
-        (str "translateX(" percent "%)")))
-
-(defn animate-slides
-  [{:keys [from-el to-el direction]}]
-  (println "animation start")
+  [{:keys [from-el to-el direction] :as state}]
   (-> (animation/duration 800)
-      (.map animation/sine)
+      (.map animation/quad)
       (.doAction
        (fn [progress]
-         (let [from-progress (* progress -100)
-               to-progress (- 100 (* progress 100))]
-            (translate-x from-el from-progress)
-            (translate-x to-el to-progress))))
-      (.last)))
+         (if (= direction :forwards)
+           (translate-slides {:from {:el from-el
+                                     :percent (* progress -100)}
+                              :to   {:el to-el
+                                     :percent (- 100 (* progress 100))}})
+           (translate-slides {:from {:el from-el
+                                     :percent (* progress 100)}
+                              :to   {:el to-el
+                                     :percent (+ -100 (* progress 100))}}))))
+      (.last)
+      (.map (constantly state))))
+
+(defn end-transition
+  "
+  Removes transition style properties after a rotation.
+
+  Takes a rotate map:
+  from-el DOMElement - Current target element
+  to-el   DOMElement - Next target element
+
+  Mutates the styles to remove transition properties.
+  Returns the next target el.
+  "
+  [{:keys [from-el to-el]}]
+  (dom/style! from-el :transform "")
+  (dom/style! from-el :zIndex "")
+  (dom/style! to-el   :transform "")
+  (dom/style! to-el   :zIndex ""))
 
 (defn rotate-slide-elements
   "
-  Rotate two slide elements by toggling classes over time. Kinda like a
-  a finite state machine.
+  Rotate two slide elements by translating over time.
 
   Takes a rotate map:
   direction keyword - Class name like :forwards or :backwards
@@ -202,17 +218,11 @@
         to-el   (query container (str ".slide[data-id=\"" to "\"]"))]
     (-> (stream/of state)
         (.map #(merge % {:from-el from-el
-                         :to-el to-el
-                         :direction-cls (name direction)}))
-        ; (animation/delay-frame)
+                         :to-el to-el}))
+        (.doAction prepare-transition)
         (.flatMap animate-slides)
-        ; (.doAction prepare-transition)
-        ; (animation/delay-frame)
-        ; (.doAction start-transition)
-        ; (.delay 800)
-        ; (.doAction end-transition)
-        (.doAction #(println "animation end"))
         (.doAction #(dom/swap-class! (query container ".slides") to-el "active"))
+        (.doAction end-transition)
         (.map (constantly to)))))
 
 (defn set-container-height
@@ -226,8 +236,8 @@
         (.startWith true)
         (.filter #(viewport/mobile?))
         (.onValue (fn [_]
-                    (set! (-> container (.-style) (.-height))
-                          (str (.-clientHeight el) "px")))))))
+                    (dom/style! container
+                                :height (str (.-clientHeight el) "px")))))))
 
 (defn update-progress-bar
   "
@@ -244,8 +254,7 @@
   (let [container (query selector)
         el (query container ".headshots__progress")
         progress (.toFixed (* (/ (dec current) total) 100) 4)]
-    (set! (-> el (.-style) (.-left))
-          (str progress "%"))))
+    (dom/style! el :left (str progress "%"))))
 
 ;; Effects
 ;; ---------------------------------------------------------------------------
@@ -362,8 +371,8 @@
                      :from current
                      :to idx
                      :direction (if (= type :next)
-                                  "forwards"
-                                  "backwards")}]
+                                  :forwards
+                                  :backwards)}]
            {:type :rotate
             :data (merge state data)})))))
 

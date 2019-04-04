@@ -96,39 +96,3 @@
   transform: translateY(0);
   top: auto;
 }
-
-.headshots__item.transition {
-  z-index: 100;
-}
-.headshots__item.transition .headshot__download {
-  transform: translateY(200%);
-}
-
-.headshots__item.rotate {
-  transition: transform 800ms ease;
-}
-
-.headshots__item.to {
-  z-index: 100;
-}
-
-.headshots__item.forwards.to {
-  transform: translatex(100%);
-}
-.headshots__item.forwards.rotate.from {
-  transform: translatex(-100%);
-}
-.headshots__item.forwards.rotate.to {
-  transform: translatex(0);
-}
-
-.headshots__item.backwards.to {
-  transform: translatex(-100%);
-}
-
-.headshots__item.backwards.rotate.from {
-  transform: translatex(100%);
-}
-.headshots__item.backwards.rotate.to {
-  transform: translatex(0);
-}

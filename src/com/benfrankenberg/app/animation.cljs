@@ -3,7 +3,6 @@
   (:require
    [bacon :as bacon :refer [End]]
    [goog.object :as obj]
-   [com.benfrankenberg.app.state :refer [bus]]
    [com.benfrankenberg.app.stream :as stream]))
 
 ;; Request Animation Frame Primitives
@@ -121,46 +120,3 @@
 (defn sine
   [t]
   (* -0.5 (- (.cos js/Math (* (.-PI js/Math) t)) 1)))
-
-;; Effects
-;; ---------------------------------------------------------------------------
-
-(defn fade-in
-  "Fade the body element in.
-  Takes the opacity as a float percentage.
-  Mutates the style of the HTML body tag."
-  [opacity]
-  (set! (-> js/document (.-body) (.-style) (.-opacity))
-        opacity))
-
-;; UI Effect Animations
-;; ---------------------------------------------------------------------------
-
-(defn go!
-  "Run the animation"
-  []
-  (-> (duration 1000)
-      (.map ease)
-      (.takeUntil bus)
-      (.doAction fade-in)
-      (.log)))
-  ; (-> (.once bacon 0)
-  ;     (.flatMap #(transition 1000 ease))
-  ;     (.doAction fade-in)
-  ;     (.onEnd identity)))
-
-(comment
-  (quadInOut 0.005)
-  (ease 0.8)
-
-  (quart 0.1)
-  (quart 0.25)
-  (quart 0.5)
-  (quart 0.75)
-  (quart 1)
-
-  (sine 0.1)
-  (sine 0.25)
-  (sine 0.5)
-  (sine 0.75)
-  (sine 1))
