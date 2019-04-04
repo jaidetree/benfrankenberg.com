@@ -1,5 +1,6 @@
 (ns com.benfrankenberg.app.dom
   (:require
+   [goog.object :as obj]
    [clojure.string :refer [join split]]
    [com.benfrankenberg.app.util :refer [query query-all]]))
 
@@ -73,4 +74,24 @@
     (doseq [el (query-all container target-classes)]
       (remove-classes! el class-names))
     (add-classes! el class-names)
+    el))
+
+
+(defn style!
+  "
+  Change several style properties of an element.
+  Takes a target DOM element and a list of key-value pairs.
+  Mutates the style properties.
+  Returns the target DOM element.
+
+  Example:
+  (style! (.querySelector js/document \"body\") :opacity 1 :height \"300px\")
+  "
+  [el & kvs]
+  (let [el-style (-> el (.-style))]
+    (loop [kvs kvs]
+      (let [[property value & remaining] kvs]
+        (when (some? kvs)
+          (obj/set el-style (name property) value)
+          (recur remaining))))
     el))
