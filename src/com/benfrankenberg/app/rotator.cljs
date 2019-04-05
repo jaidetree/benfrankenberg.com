@@ -133,7 +133,7 @@
   "
   [{:keys [from-el to-el]}]
   (dom/style! from-el :zIndex "200")
-  (dom/style! to-el   :zIndex "200"))
+  (dom/style! to-el   :zIndex "150"))
 
 (defn translate-slides
   "
