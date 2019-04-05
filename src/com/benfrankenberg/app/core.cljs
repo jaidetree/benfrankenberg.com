@@ -12,6 +12,10 @@
 (defn init!
   "
   Initialize our app.
+
+  - Fade the hero as the user scrolls down
+  - Initialize the rotator to browse headshots.
+  - Play the intro animation to fade the site in.
   "
   []
   (scroll-hero-opacity)
@@ -22,7 +26,7 @@
   "
   Restart the app.
   Only called during development.
-  Should be factored out inproduction.
+  Should be factored out in production.
   "
   []
   (println "Reloading!")
