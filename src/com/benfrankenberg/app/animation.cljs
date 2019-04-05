@@ -40,10 +40,15 @@
 ;; ---------------------------------------------------------------------------
 
 (defn loop-frames
+  "
+  A recursive function to keep requesting animation frames.
+  "
   [id cb]
-  (letfn [(frame [] (reset! id (request-frame #(do (cb %) (frame)))))]
-    (frame)
-    id))
+  (if (some? @id)
+    (reset! id
+            (request-frame #(do (cb %)
+                                (loop-frames id cb)))))
+  id)
 
 (defn frames
   []
@@ -52,7 +57,8 @@
       (let [id (atom -1)]
         (loop-frames id cb)
         (fn cancel []
-          (cancel-frame-request @id))))))
+          (cancel-frame-request @id)
+          (reset! id nil))))))
 
 (defn delay-frame
   [source]
