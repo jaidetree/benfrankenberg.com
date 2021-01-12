@@ -29,7 +29,7 @@
     "imagemin": "^6.1.0",
     "imagemin-jpegtran": "^6.0.0",
     "imagemin-pngquant": "^7.0.0",
-    "node-sass": "^4.11.0",
+    "node-sass": "^4.13.1",
     "plugin-error": "^1.0.1",
     "postcss": "^7.0.14",
     "shadow-cljs": "^2.8.18"
