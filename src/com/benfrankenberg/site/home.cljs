@@ -11,7 +11,6 @@
       [:h1.hero__title.display "Benjamin Frankenberg"]
       [:h2.hero__subtitle.body "Actor &bull; Artist &bull; Swordsman"]]
     [:div.scroll-hint
-     ; [:span.scroll-hint__text "Scroll down to discover more about Ben"]]])
      [:span.scroll-hint__text "Scroll down"]
      [:i.scroll-hint__icon.fas.fa-chevron-down]
      [:span.scroll-hint__text "Discover more"]]])
@@ -89,6 +88,73 @@
     [:div.column.about__headshot
       [headshots [1 2 3 4]]]])
 
+(defn head-mobile-meta
+  []
+  (list
+    [:meta {:name "viewport"
+            :content "width=device-width, initial-scale=1.0, user-scalable=no"}]))
+
+(defn head-open-graph-meta
+  []
+  (list
+    [:meta {:property "og:image:width"
+            :content "279"}]
+    [:meta {:property "og:image:height"
+            :content "279"}]
+    [:meta {:property "og:description"
+            :content "Actor &bull; Artist &bull; Swordsman"}]
+    [:meta {:property "og:title"
+            :content "Ben Frankenberg"}]
+    [:meta {:property "og:url"
+            :content "https://benfrankenberg.com"}]
+    [:meta {:property "og:image"
+            :content "https://benfrankenberg.com/og-image.jpg"}]))
+
+
+(defn head-favicon
+  []
+  (list
+    [:meta {:name "msapplication-TileColor"
+            :content "#da532c"}]
+    [:meta {:name "theme-color"
+            :content "#ffffff"}]
+    [:link {:rel "apple-touch-icon"
+            :sizes "180x180"
+            :href "/apple-touch-icon.png"}]
+    [:link {:rel "icon"
+            :type "image/png"
+            :sizes "32x32"
+            :href "/favicon-32x32.png"}]
+    [:link {:rel "icon"
+            :type "image/png"
+            :sizes "16x16"
+            :href "/favicon-16x16.png"}]
+    [:link {:rel "manifest"
+            :href "/site.webmanifest"}]
+    [:link {:rel "mask-icon"
+            :href "/safari-pinned-tab.svg"}]))
+
+(defn head-fonts
+  []
+  (list
+    [:link {:rel "stylesheet"
+            :href "https://fonts.googleapis.com/css?family=Alegreya|Raleway"}]
+    [:link {:rel "stylesheet"
+            :href "https://use.fontawesome.com/releases/v5.7.2/css/all.css"
+            :crossorigin "anonymous"}]))
+
+(defn styles
+  []
+  (list
+        [:link {:rel "stylesheet"
+                :href "/css/style.css"}]
+        [:link {:rel "stylesheet"
+                 :media "screen and (max-width: 929px)"
+                 :href "/css/mobile.css"}]
+        [:link {:rel "stylesheet"
+                :media "screen and (min-width: 930px)"
+                :href "/css/desktop.css"}]))
+
 (defn render
   []
   (list
@@ -99,52 +165,11 @@
         [:meta {:charset "utf-8"}]
         [:meta {:http-equiv "X-UA-Compatible"
                 :content "IE=edge,chrome=1"}]
-        [:meta {:name "viewport"
-                :content "width=device-width, initial-scale=1.0, user-scalable=no"}]
-        [:meta {:name "msapplication-TileColor"
-                :content "#da532c"}]
-        [:meta {:name "theme-color"
-                :content "#ffffff"}]
-        [:meta {:property "og:image:width"
-                :content "279"}]
-        [:meta {:property "og:image:height"
-                :content "279"}]
-        [:meta {:property "og:description"
-                :content "Actor &bull; Artist &bull; Swordsman"}]
-        [:meta {:property "og:title"
-                :content "Ben Frankenberg"}]
-        [:meta {:property "og:url"
-                :content "https://benfrankenberg.com"}]
-        [:meta {:property "og:image"
-                :content "https://benfrankenberg.com/og-image.jpg"}]
-        [:link {:rel "apple-touch-icon"
-                :sizes "180x180"
-                :href "/apple-touch-icon.png"}]
-        [:link {:rel "icon"
-                :type "image/png"
-                :sizes "32x32"
-                :href "/favicon-32x32.png"}]
-        [:link {:rel "icon"
-                :type "image/png"
-                :sizes "16x16"
-                :href "/favicon-16x16.png"}]
-        [:link {:rel "manifest"
-                :href "/site.webmanifest"}]
-        [:link {:rel "mask-icon"
-                :href "/safari-pinned-tab.svg"}]
-        [:link {:rel "stylesheet"
-                :href "https://fonts.googleapis.com/css?family=Alegreya|Raleway"}]
-        [:link {:rel "stylesheet"
-                :href "https://use.fontawesome.com/releases/v5.7.2/css/all.css"
-                :crossorigin "anonymous"}]
-        [:link {:rel "stylesheet"
-                :href "/css/style.css"}]
-        [:link {:rel "stylesheet"
-                 :media "screen and (max-width: 929px)"
-                 :href "/css/mobile.css"}]
-        [:link {:rel "stylesheet"
-                :media "screen and (min-width: 930px)"
-                :href "/css/desktop.css"}]]
+        (head-mobile-meta)
+        (head-open-graph-meta)
+        (head-favicon)
+        (head-fonts)
+        (styles)]
       [:body
         [:script
          {:type "text/javascript"}

@@ -191,7 +191,7 @@
 
   Example:
   (-> (duration 1000)
-      (.map ease)
+      (.map cubic)
       (.log))
   "
   [t]
@@ -204,7 +204,7 @@
 
   Example:
   (-> (duration 1000)
-      (.map ease)
+      (.map quad)
       (.log))
   "
   [t]
@@ -220,7 +220,7 @@
 
   Example:
   (-> (duration 1000)
-      (.map ease)
+      (.map quart)
       (.log))
   "
   [t]
@@ -234,7 +234,7 @@
 
   Example:
   (-> (duration 1000)
-      (.map ease)
+      (.map sine)
       (.log))
   "
   [t]
