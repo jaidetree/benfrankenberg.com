@@ -1,0 +1,79 @@
+#+title: benfrankenberg.com
+
+The source code for benfrankenberg.com, a portfolio website for a close friend
+of mine.
+
+* Overview
+
+This is the source code for https://benfrankenberg.com. It runs on ClojureScript
+and uses node.js to run build tasks.
+
+* How it Works
+
+The website is a static site meaning that it serves files as is upon request. To
+make any changes we first update the source code, then the build tools transform
+it into static HTML, CSS, and JS. This causes the site to run fast, search
+engine optimized, and the build steps are automatically performed on pushes to the
+master branch.
+
+* Files
+
+To make changes, update files in the following folders. The build
+tools will take care of the rest on deploy.
+
+#+begin_src bash :results output :export results
+tree --noreport -d -F src
+#+end_src
+
+#+RESULTS:
+#+begin_example
+src
+├── com
+│   └── benfrankenberg
+│       ├── app
+│       ├── site
+│       └── tasks
+│           └── lib
+├── img
+├── js
+│   └── hacks
+├── public
+│   └── downloads
+└── scss
+    └── blocks
+#+end_example
+
+** Usage
+
+*** Development
+
+#+begin_src bash
+npx shadow-cljs watch app
+#+end_src
+
+*** Deploys
+
+The hosting service automatically runs the build steps to generate the static
+website files. Simply follow the normal git source-code management process to
+trigger a deploy when pushing one or more commits.
+
+#+begin_src bash
+git checkout master
+git fetch origin master
+git merge <feature>
+git add -i
+git commit -m "<commit message>"
+git push origin master
+#+end_src
+
+** Technologies
+
+- [[ClojureScript][https://clojurescript.org/]] - Powers the build tooling, will be used to write the frontend.
+- [[Gulp][https://gulpjs.com/]] - Reusable tasks structure and source-file streams
+- [[Highland][https://highlandjs.org/]] - A functional-reactive-programming-based stream library to make gulp streams more powerful.
+- [[SASS][https://sass-lang.com/]] - A CSS pre-processor to provide more flexibility when writing stylesheets.
+
+## Credits
+
+- [[FIXME][FIXME]] - Site photography
+- [[Eccentric J][https://eccentric-j.com/]] - Developer
